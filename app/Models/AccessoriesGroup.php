@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class AccessoriesGroup extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
 }

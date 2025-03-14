@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="{{ asset('storage/dmk/logo.ico') }}">
-    <title>NexGen POS System</title>
+    <title>Crystal Project</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -26,7 +26,7 @@
             <div class="flex flex-col justify-center">
                 <x-application-logo class="block w-auto h-16 text-gray-800 fill-current dark:text-gray-200" />
                 <div class="text-xl text-gray-500">
-                    Grow with Together
+                    Aim High, Fly High
                 </div>
             </div>
         </div>
