@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\Accounting\AccountController;
 use App\Http\Controllers\Api\Accounting\AccountTitleController;
+use App\Http\Controllers\Api\Acessory\Group;
+use App\Http\Controllers\Api\Acessory\Item;
 use App\Http\Controllers\Api\Config\CategoryController;
 use App\Http\Controllers\Api\Config\ItemLocationController;
 use App\Http\Controllers\Api\Config\PaymentMethodController;
@@ -29,7 +31,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware([])->group(function () {
-    // Route::get('categories', CategoryController::class)->name('api.category');
+    Route::get('/accessories-group', Group::class)->name('api.accessories-group');
+    Route::get('/accessory', Item::class)->name('api.accessory');
     // Route::get('sub-categories', SubCategoryController::class)->name('api.sub-category');
     // Route::get('products', ProductController::class)->name('api.product');
     // Route::get('contacts', ContactController::class)->name('api.contact');

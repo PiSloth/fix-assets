@@ -19,6 +19,7 @@ use App\Livewire\Config\Setting\User;
 use App\Livewire\Config\Setting\UserPermission;
 use App\Livewire\Crm\Contact;
 use App\Livewire\Inventory\Balance;
+use App\Livewire\ProductSetting\Accessory;
 use App\Livewire\ProductSetting\AccessoryConfig;
 use App\Livewire\Purchase\PurchaseVoucher;
 use App\Livewire\Purchase\PurchaseVoucherDetail;
@@ -88,6 +89,7 @@ Route::get('/pdf/{id}', [InvoiceController::class, 'generateInvoice']);
 
 Route::middleware(['auth'])->prefix('product')->group(function () {
     Route::get('/accessory-config', AccessoryConfig::class)->name('accessory-config');
+        Route::get('/accessory', Accessory::class)->name('accessory');
 });
 
 Route::middleware(['auth'])->prefix('company')->group(function () {

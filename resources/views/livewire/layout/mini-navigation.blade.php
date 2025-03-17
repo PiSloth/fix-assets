@@ -91,9 +91,13 @@ $logout = function (Logout $logout) {
                                 </x-slot>
 
                                 <x-slot name="content">
-                                    <!-- Accessory -->
+                                    <!-- Accessory Group-->
                                     <x-dropdown-link :href="route('accessory-config')" wire:navigate>
                                         {{ 'Accessory Group' }}
+                                    </x-dropdown-link>
+                                     <!-- Accessory -->
+                                     <x-dropdown-link :href="route('accessory')" wire:navigate>
+                                        {{ 'Accessory' }}
                                     </x-dropdown-link>
                                 </x-slot>
                             </x-dropdown>

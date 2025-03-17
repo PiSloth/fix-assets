@@ -10,4 +10,9 @@ class Accessory extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function accessoriesGroup()
+    {
+        return $this->belongsTo(AccessoriesGroup::class);
+    }
 }

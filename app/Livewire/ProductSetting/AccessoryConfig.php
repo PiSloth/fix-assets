@@ -18,11 +18,12 @@ class AccessoryConfig extends Component
     {
         $validated = $this->validate([
             'name' => 'required',
-            'code' => 'required|unique:accessories_gorups,code',
-            'image' => 'required',
+            'code' => 'required|unique:accessories_groups,code',
         ]);
 
-        AccessoriesGroup::create($validated);
+        $path = $this->image->store('images', 'public');
+
+        AccessoriesGroup::create(array_merge(['image' => $path],$validated));
 
         $this->dispatch('closeModal', 'newModal');
         $this->reset('name', 'code', 'image');
@@ -43,7 +44,7 @@ class AccessoryConfig extends Component
 
         $this->validate([
             'name' => 'required',
-            'code' => 'required|unique:accessories_gorups,code,' . $this->edit_id,
+            'code' => 'required|unique:accessories_groups,code,' . $this->edit_id,
         ]);
 
         AccessoriesGroup::find($this->edit_id)->update([
