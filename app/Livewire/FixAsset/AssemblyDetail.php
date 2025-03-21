@@ -83,7 +83,7 @@ class AssemblyDetail extends Component
                 'description' => $this->description,
             ]);
 
-            $path = $this->image->store('images', 'public');
+            $path = $this->image->store('images', 'tempublic');
 
             ProductImage::create([
                 'product_id' => $product->id,
@@ -110,9 +110,7 @@ class AssemblyDetail extends Component
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
         ]);
 
-        $path = $this->image->store('images', 'public');
-
-        $path = $this->image->store('images', 'public');
+        $path = $this->image->store('images', 'tempublic');
         ProductImage::create([
             'product_id' => $this->product_id,
             'image' => $path,

@@ -106,7 +106,7 @@ $logout = function (Logout $logout) {
 
 
                 {{-- Config links  --}}
-                @
+
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <div class="hidden sm:flex sm:items-center">
                         <x-dropdown align="right" width="48">

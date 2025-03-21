@@ -40,7 +40,7 @@ class Accessory extends Component
             $this->validate([
                 'image' => 'required|image|max:1024',
             ]);
-            $path = $this->image->store('images', 'public');
+            $path = $this->image->store('images', 'tempublic');
         }
 
         ModelsAccessory::create(array_merge(['image' => $path], $validated));

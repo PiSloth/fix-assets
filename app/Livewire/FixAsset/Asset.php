@@ -56,7 +56,7 @@ class Asset extends Component
         $department = Department::find($this->department_id);
         $code = $department->short_name.'-'.Carbon::now()->format('jmy-His');
 
-        $path = $this->image->store('images', 'public');
+        $path = $this->image->store('images', 'tempublic');
         // dd($path);
 
         Assembly::create(array_merge([
