@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('assemblies', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('code');
+            $table->foreignId('branch_id')->constrained('branches');
+            $table->foreignId('department_id')->constrained('departments');
+            $table->foreignId('employee_id')->nullable()->constrained('employees');
+            $table->foreignId('user_id')->constrained();
+            $table->binary('image')->nullable();
+            $table->string('remark')->nullable();
             $table->timestamps();
         });
     }

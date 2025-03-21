@@ -14,6 +14,9 @@
                         <th scope="col" class="px-6 py-3">
                             Name
                         </th>
+                        <th scope="col" class="px-6 py-3">
+                            Short Code
+                        </th>
                         <th scope="col" class="px-6 py-3 sr-only">
                             Action
                         </th>
@@ -26,6 +29,9 @@
                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 {{ $department->name }}
                             </th>
+                            <td class="px-6 py-4">
+                                {{ $department->short_name }}
+                            </td>
                             <td class="px-6 py-4">
                                 <x-wui-button label="edit" wire:click='edit({{ $department->id }})' />
                                 <x-danger-button
@@ -45,18 +51,16 @@
         </div>
 
         {{-- New modal  --}}
-        <x-wui-modal-card title="New Category" name="newModal">
+        <x-wui-modal-card title="New Department" name="newModal">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <x-wui-input label="Name" wire:model='name' placeholder="eg. Humburger" />
-
+                <x-wui-input label="Short Name" wire:model='short_name' placeholder="eg. H" />
             </div>
-
             <x-slot name="footer" class="flex justify-between gap-x-4">
                 <x-wui-button flat negative label="Delete" x-on:click="$closeModal('newModal')" />
 
                 <div class="flex gap-x-4">
                     <x-wui-button flat label="Cancel" x-on:click="close" />
-
                     <x-wui-button primary label="Save" wire:click="create" />
 
                 </div>
@@ -64,10 +68,10 @@
         </x-wui-modal-card>
 
         {{-- Edit modal  --}}
-        <x-wui-modal-card title="New Category" name="editModal">
+        <x-wui-modal-card title="Edit Department" name="editModal">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <x-wui-input label="Name" wire:model='up_name' placeholder="eg. Humburger" />
-
+                <x-wui-input label="Short Name" wire:model='up_short_name' placeholder="eg. H" />
             </div>
 
             <x-slot name="footer" class="flex justify-between gap-x-4">

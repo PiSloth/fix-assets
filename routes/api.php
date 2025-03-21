@@ -4,14 +4,12 @@ use App\Http\Controllers\Api\Accounting\AccountController;
 use App\Http\Controllers\Api\Accounting\AccountTitleController;
 use App\Http\Controllers\Api\Acessory\Group;
 use App\Http\Controllers\Api\Acessory\Item;
-use App\Http\Controllers\Api\Config\CategoryController;
+use App\Http\Controllers\Api\Company\EmployeeController;
 use App\Http\Controllers\Api\Config\ItemLocationController;
 use App\Http\Controllers\Api\Config\PaymentMethodController;
 use App\Http\Controllers\Api\Config\ProductController;
 use App\Http\Controllers\Api\Config\SubCategoryController;
 use App\Http\Controllers\Api\Crm\ContactController;
-use App\Models\AccountTitle;
-use App\Models\ItemLocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +31,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware([])->group(function () {
     Route::get('/accessories-group', Group::class)->name('api.accessories-group');
     Route::get('/accessory', Item::class)->name('api.accessory');
+    Route::get('/employees', EmployeeController::class)->name('api.employees');
+
     // Route::get('sub-categories', SubCategoryController::class)->name('api.sub-category');
     // Route::get('products', ProductController::class)->name('api.product');
     // Route::get('contacts', ContactController::class)->name('api.contact');

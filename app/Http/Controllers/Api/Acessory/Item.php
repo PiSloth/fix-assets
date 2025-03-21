@@ -14,7 +14,7 @@ class Item extends Controller
     public function __invoke(Request $request): Collection
     {
         return Accessory::query()
-            ->select('id', DB::raw("concat (code,' / ',name) as group"))
+            ->select('id', DB::raw("concat(code,' / ',name) AS group"))
             ->orderBy('code')
             ->when(
                 $request->search,

@@ -6,16 +6,25 @@ use App\Models\AccessoriesGroup;
 use App\Models\Accessory as ModelsAccessory;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-use Livewire\Features\SupportFileUploads\WithFileUploads;
+use Livewire\WithFileUploads;
 
 class Accessory extends Component
 {
     use WithFileUploads;
-    public $image, $name, $code;
-    public $edit_id;
-    public $up_name, $up_code;
-    public $accessories_group_id;
 
+    public $image;
+
+    public $name;
+
+    public $code;
+
+    public $edit_id;
+
+    public $up_name;
+
+    public $up_code;
+
+    public $accessories_group_id;
 
     public function create()
     {
@@ -25,9 +34,16 @@ class Accessory extends Component
             'accessories_group_id' => 'required',
         ]);
 
-        $path = $this->image->store('images', 'public');
+        $path = '/images/default.png';
 
-        ModelsAccessory::create(array_merge(['image' => $path],$validated));
+        if ($this->image) {
+            $this->validate([
+                'image' => 'required|image|max:1024',
+            ]);
+            $path = $this->image->store('images', 'public');
+        }
+
+        ModelsAccessory::create(array_merge(['image' => $path], $validated));
 
         $this->dispatch('closeModal', 'newModal');
         $this->reset('name', 'code', 'image', 'accessories_group_id');
@@ -48,7 +64,7 @@ class Accessory extends Component
 
         $this->validate([
             'name' => 'required',
-            'code' => 'required|unique:accessories,code,' . $this->edit_id,
+            'code' => 'required|unique:accessories,code,'.$this->edit_id,
         ]);
 
         Accessory::find($this->edit_id)->update([
@@ -67,7 +83,7 @@ class Accessory extends Component
         $groups = AccessoriesGroup::all();
         $accessory = ModelsAccessory::all();
 
-        return view('livewire.product-setting.accessory',[
+        return view('livewire.product-setting.accessory', [
             'accessories' => $accessory,
             'accessories_groups' => $groups,
         ]);

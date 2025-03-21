@@ -9,10 +9,18 @@ use Livewire\WithFileUploads;
 class AccessoryConfig extends Component
 {
     use WithFileUploads;
-    public $image, $name, $code;
-    public $edit_id;
-    public $up_name, $up_code;
 
+    public $image;
+
+    public $name;
+
+    public $code;
+
+    public $edit_id;
+
+    public $up_name;
+
+    public $up_code;
 
     public function create()
     {
@@ -21,9 +29,16 @@ class AccessoryConfig extends Component
             'code' => 'required|unique:accessories_groups,code',
         ]);
 
-        $path = $this->image->store('images', 'public');
+        $path = '/images/default.png';
 
-        AccessoriesGroup::create(array_merge(['image' => $path],$validated));
+        if ($this->image) {
+            $this->validate([
+                'image' => 'required|image|max:1024',
+            ]);
+            $path = $this->image->store('images', 'public');
+        }
+
+        AccessoriesGroup::create(array_merge(['image' => $path], $validated));
 
         $this->dispatch('closeModal', 'newModal');
         $this->reset('name', 'code', 'image');
@@ -44,7 +59,7 @@ class AccessoryConfig extends Component
 
         $this->validate([
             'name' => 'required',
-            'code' => 'required|unique:accessories_groups,code,' . $this->edit_id,
+            'code' => 'required|unique:accessories_groups,code,'.$this->edit_id,
         ]);
 
         AccessoriesGroup::find($this->edit_id)->update([

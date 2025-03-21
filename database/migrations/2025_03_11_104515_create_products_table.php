@@ -14,11 +14,16 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignId('assembly_id')->constrained('assemblies');
             $table->string('code');
             $table->string('serial_number')->nullable();
             $table->string('description');
+            $table->date('purchase_date')->nullable();
+            $table->date('warranty_date')->nullable();
+            $table->string('purchase_price')->nullable();
+            $table->string('purchase_from')->nullable();
+            $table->stirng('status')->default('active');
             $table->string('remark')->nullable();
-            $table->binary('image');
             $table->timestamps();
         });
     }

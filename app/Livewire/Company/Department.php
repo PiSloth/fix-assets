@@ -15,6 +15,9 @@ class Department extends Component
 
     public $edit_id;
     public $delete_id;
+    public $short_name;
+
+    public $up_short_name;
 
 
     public $up_name;
@@ -24,13 +27,17 @@ class Department extends Component
     {
         $validated = $this->validate([
             'name' => 'required|unique:departments,name',
+            'short_name' => 'required|unique:departments,short_name',
         ]);
 
+        // dd($validated);
+
         ModelsDepartment::create($validated);
+
+
         $this->dispatch('closeModal', 'newModal');
 
-
-        $this->reset('name');
+        $this->reset('name', 'short_name');
         $this->notification()->send([
             'icon' => 'success',
             'title' => 'Success',
@@ -42,16 +49,18 @@ class Department extends Component
     {
         $this->validate([
             'up_name' => 'required|unique:departments,name,' . $this->edit_id,
-
+            'up_short_name' => 'required|unique:departments,short_name,' . $this->edit_id,
         ]);
         $department = ModelsDepartment::find($this->edit_id);
+
         $department->update([
             'name' => $this->up_name,
+            'short_name' => $this->up_short_name,
         ]);
 
         $this->dispatch('closeModal', 'editModal');
 
-        $this->reset('up_name',  'edit_id');
+        $this->reset('up_name',  'edit_id', 'up_short_name');
         $this->notification()->send([
             'icon' => 'success',
             'title' => 'Success',
@@ -63,6 +72,7 @@ class Department extends Component
     {
         $query = ModelsDepartment::find($id);
         $this->up_name = $query->name;
+        $this->up_short_name = $query->short_name;
 
         $this->edit_id = $id;
 
@@ -71,7 +81,7 @@ class Department extends Component
 
     public function cancleEdit()
     {
-        $this->reset('up_name', 'edit_id');
+        $this->reset('up_name', 'edit_id', 'up_short_name');
     }
 
     // Delection

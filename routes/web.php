@@ -1,36 +1,18 @@
 <?php
 
 use App\Http\Controllers\Pdf\InvoiceController;
-use App\Livewire\Accounting\Config\CoaList;
-use App\Livewire\Accounting\Config\DoubleEntry;
-use App\Livewire\Accounting\IncomeStatement;
-use App\Livewire\Accounting\Report\GeneralLedger;
 use App\Livewire\Company\Branch as CompanyBranch;
 use App\Livewire\Company\Department;
 use App\Livewire\Company\Employee;
 use App\Livewire\Company\Position;
-use App\Livewire\Config\Accounting\PaymentMethod;
-use App\Livewire\Config\ProductLocation;
-use App\Livewire\Config\ProductSetting\Branch;
-use App\Livewire\Config\ProductSetting\Category;
-use App\Livewire\Config\ProductSetting\Product;
-use App\Livewire\Config\ProductSetting\SubCategory;
 use App\Livewire\Config\Setting\User;
 use App\Livewire\Config\Setting\UserPermission;
-use App\Livewire\Crm\Contact;
-use App\Livewire\Inventory\Balance;
+use App\Livewire\FixAsset\AssemblyDetail;
+use App\Livewire\FixAsset\Asset;
 use App\Livewire\ProductSetting\Accessory;
 use App\Livewire\ProductSetting\AccessoryConfig;
-use App\Livewire\Purchase\PurchaseVoucher;
-use App\Livewire\Purchase\PurchaseVoucherDetail;
-use App\Livewire\Purchase\PurchaseVoucherRecords;
-use App\Livewire\Sale\DailyInvoice;
-use App\Livewire\Sale\InvoiceDetail;
-use App\Livewire\Sale\SaleInvoice;
-use App\Models\BranchProductLocation;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Barryvdh\Snappy\Facades\SnappyPdf;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use Spatie\Browsershot\Browsershot;
@@ -68,7 +50,6 @@ Route::get('/pdf/{id}', [InvoiceController::class, 'generateInvoice']);
 // return $pdf->download('example.pdf');
 // });
 
-
 // Route::get('/test', function () {
 
 //     $new = ['name' => "မောင်ပိုင်", "nick name", "ကဘူးကီ"];
@@ -78,7 +59,6 @@ Route::get('/pdf/{id}', [InvoiceController::class, 'generateInvoice']);
 //     $pdf = Browsershot::html($html)
 //         ->pdf();
 
-
 //     return Response($pdf, 200, [
 //         'Content-Type' => 'application/pdf',
 //         'Content-Disposition' => 'attachment; filename="example.pdf"',
@@ -86,10 +66,9 @@ Route::get('/pdf/{id}', [InvoiceController::class, 'generateInvoice']);
 //     ]);
 // });
 
-
 Route::middleware(['auth'])->prefix('product')->group(function () {
     Route::get('/accessory-config', AccessoryConfig::class)->name('accessory-config');
-        Route::get('/accessory', Accessory::class)->name('accessory');
+    Route::get('/accessory', Accessory::class)->name('accessory');
 });
 
 Route::middleware(['auth'])->prefix('company')->group(function () {
@@ -99,12 +78,16 @@ Route::middleware(['auth'])->prefix('company')->group(function () {
     Route::get('/employee', Employee::class)->name('employee');
 });
 
-
 Route::middleware(['auth'])->prefix('setting')->group(function () {
     Route::get('/user', User::class)->name('user-setting');
     Route::get('/permission', UserPermission::class)->name('user-permission');
 });
 
+Route::middleware(['auth'])->prefix('fix-asset')->group(function () {
+    Route::get('/assets', Asset::class)->name('assets');
+    Route::get('/assembly/detail', AssemblyDetail::class)->name('assembly.detail');
+    // Route::get('/permission', UserPermission::class)->name('user-permission');
+});
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -114,4 +97,4 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

@@ -38,7 +38,8 @@
                                 {{ $item->code }}
                             </td>
                             <td class="px-6 py-4">
-                                <img src="{{ asset('storage/' . $item->image ) }}" alt="{{ $item->image }}" class="w-20 h-20 rounded-md shadow-lg">
+                                <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->image }}"
+                                    class="w-20 h-20 rounded-md shadow-lg">
                             </td>
 
                             <td class="px-6 py-4">
@@ -61,8 +62,8 @@
         {{-- New modal  --}}
         <x-wui-modal-card title="New Category" name="newModal">
             <div class="grid grid-cols-1 gap-4 mb-2 sm:grid-cols-2">
-                <x-wui-input label="Name" wire:model='name' placeholder="eg. Computer" />
-                <x-wui-input label="Code" wire:model='code' placeholder="eg C" />
+                <x-wui-input label="Name" wire:model='name' placeholder="eg. Electronic" />
+                <x-wui-input label="Code" wire:model='code' placeholder="eg Ec" />
             </div>
 
             <div>
@@ -124,13 +125,13 @@
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <x-wui-input label="Name" wire:model='up_name' placeholder="eg. Humburger" />
                 <x-wui-input label="Phone" wire:model='up_code' placeholder="HM" />
-                            </div>
+            </div>
 
             <x-slot name="footer" class="flex justify-between gap-x-4">
                 <x-wui-button flat negative label="Delete" x-on:click="$closeModal('editModal')" />
 
                 <div class="flex gap-x-4">
-                    <x-wui-button flat label="Cancel" x-on:click="close"  />
+                    <x-wui-button flat label="Cancel" x-on:click="close" />
                     <x-wui-button primary label="Update" wire:click="update" />
                 </div>
             </x-slot>
