@@ -22,7 +22,7 @@ return new class extends Migration
             $table->date('warranty_date')->nullable();
             $table->string('purchase_price')->nullable();
             $table->string('purchase_from')->nullable();
-            $table->stirng('status')->default('active');
+            $table->string('status')->default('active');
             $table->string('remark')->nullable();
             $table->timestamps();
         });

@@ -113,7 +113,7 @@ $logout = function (Logout $logout) {
                                 <x-slot name="trigger">
                                     <button
                                         class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md dark:text-gray-400 dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
-                                        <div x-data="{ name: 'Fix Assets' }" x-text="name"
+                                        <div x-data="{ name: 'Assets' }" x-text="name"
                                             x-on:profile-updated.window="name = $event.detail.name"></div>
                                         <div class="ms-1">
                                             <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg"
@@ -237,27 +237,62 @@ $logout = function (Logout $logout) {
         </div>
 
 
-        <!-- Responsive Config Options -->
+        <!-- Responsive Company Options -->
+        @haspermission('company_access')
+            <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+                <div class="px-4">
+                    <div class="text-base font-medium text-teal-600 dark:text-gray-200" x-data="{ name: 'Config' }"
+                        x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
+                    <div class="text-sm font-medium text-gray-500">Conguration of your business</div>
+                </div>
+
+                <div class="mt-3 space-y-1">
+                    <x-responsive-nav-link :href="route('branch')" wire:navigate>
+                        {{ __('Branch') }}
+                    </x-responsive-nav-link>
+                    <!--Department -->
+                    <x-responsive-nav-link :href="route('department')" wire:navigate>
+                        {{ 'Department' }}
+                    </x-responsive-nav-link>
+                    <!--Position -->
+                    <x-responsive-nav-link :href="route('position')" wire:navigate>
+                        {{ 'Position' }}
+                    </x-responsive-nav-link>
+
+                    <!--Employee -->
+                    <x-responsive-nav-link :href="route('employee')" wire:navigate>
+                        {{ 'Employee' }}
+                    </x-responsive-nav-link>
+
+                </div>
+            </div>
+        @endhaspermission
+
+        <!-- Responsive Accessories Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">
                 <div class="text-base font-medium text-teal-600 dark:text-gray-200" x-data="{ name: 'Config' }"
                     x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
-                <div class="text-sm font-medium text-gray-500">Conguration of your business</div>
+                <div class="text-sm font-medium text-gray-500">Classify Accessory Groups</div>
             </div>
-
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('branch')" wire:navigate>
-                    {{ __('Branch') }}
+                <!-- Accessory Group-->
+                <x-responsive-nav-link :href="route('accessory-config')" wire:navigate>
+                    {{ 'Accessory Group' }}
+                </x-responsive-nav-link>
+                <!-- Accessory -->
+                <x-responsive-nav-link :href="route('accessory')" wire:navigate>
+                    {{ 'Accessory' }}
                 </x-responsive-nav-link>
 
+                <x-responsive-nav-link :href="route('assets')" wire:navigate>
+                    {{ 'Fix Assets' }}
+                </x-responsive-nav-link>
             </div>
         </div>
 
-
-
-
         <!-- Responsive User Setting Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+        {{-- <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">
                 <div class="text-base font-medium text-teal-600 dark:text-gray-200" x-data="{ name: 'Setting' }"
                     x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
@@ -275,7 +310,7 @@ $logout = function (Logout $logout) {
                     {{ __('Role & Permission') }}
                 </x-responsive-nav-link>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
