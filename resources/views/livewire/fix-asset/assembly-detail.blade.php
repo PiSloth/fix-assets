@@ -70,12 +70,14 @@
                                 $count = 'Photos ' . count($item->images);
                             @endphp
                             <x-wui-button teal label="{{ $count }}"
-                                wire:click="viewPhotos({{ $item->id }},'{{ $item->name }}') " />
+                                wire:click="viewPhotos({{ $item->id }},'{{ $item->name }}')" />
                         </td>
 
                         <td class="px-6 py-4">
                             <x-wui-button label="add photo"
                                 wire:click="addProductModal({{ $item->id }},'{{ $item->name }}')" />
+                            <x-wui-button amber label="detial"
+                                href="{{ route('product-view', ['id' => $item->id]) }}" />
                         </td>
                     </tr>
                 @empty
@@ -126,7 +128,7 @@
                         class="object-cover w-full h-32 rounded-lg" />
 
                     <!-- Close Button -->
-                    <span wire:click='calcle_image'
+                    <span wire:click='cancle_image'
                         class="absolute p-1 text-white transition bg-red-500 rounded-full opacity-0 cursor-pointer top-2 right-2 group-hover:opacity-100"
                         title="Remove image">
                         Cancle
@@ -183,7 +185,7 @@
                         class="object-cover w-full h-32 rounded-lg" />
 
                     <!-- Close Button -->
-                    <span wire:click='calcle_image'
+                    <span wire:click='cancle_image'
                         class="absolute p-1 text-white transition bg-red-500 rounded-full opacity-0 cursor-pointer top-2 right-2 group-hover:opacity-100"
                         title="Remove image">
                         Cancle
@@ -215,9 +217,9 @@
                     <img src="{{ Storage::url($image->image) }}" alt="product name" class="w-full rounded-lg" />
                     <!-- Close Button -->
                     <span
-                        class="absolute p-1 text-white transition bg-red-500 rounded-full opacity-0 cursor-pointer top-2 right-2 group-hover:opacity-100"
+                        class="absolute p-1 text-white transition bg-teal-500 rounded-full opacity-0 cursor-pointer top-2 right-2 group-hover:opacity-100"
                         title="Remove image">
-                        Cancle
+                        Cool
                     </span>
                 </div>
             @endforeach

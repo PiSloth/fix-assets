@@ -11,6 +11,7 @@ use App\Livewire\FixAsset\AssemblyDetail;
 use App\Livewire\FixAsset\Asset;
 use App\Livewire\ProductSetting\Accessory;
 use App\Livewire\ProductSetting\AccessoryConfig;
+use App\Livewire\ProductSetting\ProductDetail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use Illuminate\Support\Facades\Response;
@@ -69,6 +70,7 @@ Route::get('/pdf/{id}', [InvoiceController::class, 'generateInvoice']);
 Route::middleware(['auth'])->prefix('product')->group(function () {
     Route::get('/accessory-config', AccessoryConfig::class)->name('accessory-config');
     Route::get('/accessory', Accessory::class)->name('accessory');
+    Route::get('/product/view', ProductDetail::class)->name('product-view');
 });
 
 Route::middleware(['auth'])->prefix('company')->group(function () {

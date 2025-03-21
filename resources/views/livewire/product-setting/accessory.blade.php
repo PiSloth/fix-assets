@@ -102,7 +102,7 @@
                             class="object-cover w-full h-32 rounded-lg" />
 
                         <!-- Close Button -->
-                        <span wire:click='calcle_image'
+                        <span wire:click='cancle_image'
                             class="absolute p-1 text-white transition bg-red-500 rounded-full opacity-0 cursor-pointer top-2 right-2 group-hover:opacity-100"
                             title="Remove image">
                             Cancle

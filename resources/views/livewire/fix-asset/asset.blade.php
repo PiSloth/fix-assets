@@ -159,7 +159,7 @@
                         class="object-cover w-full h-32 rounded-lg" />
 
                     <!-- Close Button -->
-                    <span wire:click='calcle_image'
+                    <span wire:click='cancle_image'
                         class="absolute p-1 text-white transition bg-red-500 rounded-full opacity-0 cursor-pointer top-2 right-2 group-hover:opacity-100"
                         title="Remove image">
                         Cancle
@@ -225,7 +225,7 @@
         </form>
     </x-modal>
 
-    {{-- filter for sale --}}
+    {{-- filter for assembly --}}
     <x-filter-sidebar>
         <!-- Department Filter -->
         <div class="mt-4">
@@ -246,7 +246,6 @@
                 without-time="true" />
         </div> --}}
     </x-filter-sidebar>
-
 </div>
 
 

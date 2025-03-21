@@ -77,7 +77,7 @@ class Accessory extends Component
         $this->dispatch('closeModal', 'editModal');
     }
 
-    public function calcle_image()
+    public function cancle_image()
     {
         $this->reset('image');
     }

@@ -128,7 +128,7 @@ class AssemblyDetail extends Component
         $this->dispatch('openModal', 'viewImage');
     }
 
-    public function calcle_image()
+    public function cancle_image()
     {
         $this->reset('image');
     }
