@@ -128,6 +128,11 @@ class AssemblyDetail extends Component
         $this->dispatch('openModal', 'viewImage');
     }
 
+    public function calcle_image()
+    {
+        $this->reset('image');
+    }
+
     #[Title('Assembly Detail')]
     public function render()
     {

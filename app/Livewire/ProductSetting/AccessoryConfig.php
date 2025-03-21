@@ -3,6 +3,7 @@
 namespace App\Livewire\ProductSetting;
 
 use App\Models\AccessoriesGroup;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -71,6 +72,12 @@ class AccessoryConfig extends Component
         $this->dispatch('closeModal', 'editModal');
     }
 
+    public function calcle_image()
+    {
+        $this->reset('image');
+    }
+
+    #[Title('Assembly Group')]
     public function render()
     {
         return view('livewire.product-setting.accessory-config', [

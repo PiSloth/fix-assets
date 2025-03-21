@@ -103,6 +103,11 @@ class Asset extends Component
         $this->dispatch('closeModal', 'editModal');
     }
 
+    public function calcle_image()
+    {
+        $this->reset('image');
+    }
+
     #[Title('Asset')]
     public function render()
     {
