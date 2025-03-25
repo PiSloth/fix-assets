@@ -65,12 +65,30 @@
                             {{ $item->remark }}
                         </td>
 
-                        <td class="px-6 py-4">
+                        {{-- <td class="px-6 py-4">
                             @php
                                 $count = 'Photos ' . count($item->images);
                             @endphp
                             <x-wui-button teal label="{{ $count }}"
                                 wire:click="viewPhotos({{ $item->id }},'{{ $item->name }}')" />
+                        </td> --}}
+
+                        <td class="px-6 py-4">
+                            <div wire:click="viewPhotos({{ $item->id }},'{{ $item->name }}')"
+                                class="cursor-pointer">image
+                                <img src="{{ Storage::url($item->images->first()->image) ?? '' }}"
+                                    alt="{{ $item->images->first() }}" class="object-cover w-16 h-16 rounded-lg" />
+                                <span>{{ count($item->images) }}</span>
+                            </div>
+
+                            {{-- <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                                @if ($item->images && $item->images->count())
+                                    @foreach ($item->images as $image)
+                                        <img src="{{ Storage::url($image->image) }}" alt="Image"
+                                            class="object-cover w-24 h-24 rounded-lg" />
+                                    @endforeach
+                                @endif
+                            </div> --}}
                         </td>
 
                         <td class="px-6 py-4">

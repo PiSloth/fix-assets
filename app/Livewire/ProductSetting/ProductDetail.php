@@ -5,6 +5,7 @@ namespace App\Livewire\ProductSetting;
 use App\Models\Assembly;
 use App\Models\Product;
 use App\Models\ProductRemark;
+use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
@@ -52,6 +53,7 @@ class ProductDetail extends Component
         }
     }
 
+    #[Title('Product Detail')]
     public function render()
     {
         return view('livewire.product-setting.product-detail', [

@@ -80,11 +80,11 @@
                         </td>
 
                         <td class="px-6 py-4">
-                            <x-wui-button label="edit" wire:click='read({{ $item->id }})' />
-                            <x-wui-button teal label="detial" :href="route('assembly.detail', ['id' => $item->id])" />
-                            <x-danger-button x-on:click.prevent="$dispatch('open-modal', 'confirm-item-delete')"
+                            {{-- <x-wui-button label="edit" wire:click='read({{ $item->id }})' /> --}}
+                            <x-wui-button teal icon="eye" :href="route('assembly.detail', ['id' => $item->id])" />
+                            {{-- <x-danger-button x-on:click.prevent="$dispatch('open-modal', 'confirm-item-delete')"
                                 wire:click='setDelete({{ $item->id }})'>
-                                delete</x-danger-button>
+                                delete</x-danger-button> --}}
                         </td>
                     </tr>
                 @empty

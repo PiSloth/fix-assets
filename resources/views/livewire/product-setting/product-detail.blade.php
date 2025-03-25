@@ -7,15 +7,20 @@
             <x-wui-button label="Remark" @click="$openModal('newModal')" />
         </div>
     </div>
-    <div class="flex flex-wrap gap-2 mb-4">
+
+
+
+
+    <div class="grid grid-cols-2 gap-4 mb-3 md:grid-cols-3">
         @foreach ($product->images as $image)
             <div>
                 <!-- Image Box -->
-                <img src="{{ Storage::url($image->image) }}" alt="product name" class="h-32 rounded-lg" />
+                <img src="{{ Storage::url($image->image) }}" alt="product name" class="h-auto max-w-full rounded-lg" />
                 <!-- Close Button -->
             </div>
         @endforeach
     </div>
+
 
 
     <div class="w-full mx-auto md:w-1/2">
@@ -25,9 +30,7 @@
             <span>Product Code: </span>
             <span class="text-teal-500">{{ $product->code }}</span>
             <span>Product Description: </span>
-            <span>{{ $product->description }} Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ea et culpa
-                saepe accusamus exercitationem, ullam eius neque sequi, repellat mollitia ducimus unde perspiciatis
-                consectetur nemo totam adipisci impedit, aliquam blanditiis?</span>
+            <span>{{ $product->description }} </span>
         </div>
         @if ($product->remark)
             <div class="max-w-2xl px-8 py-4 mb-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
@@ -56,7 +59,7 @@
                 <div class="mt-2">
                     <a href="#"
                         class="text-xl font-bold text-gray-700 dark:text-white hover:text-gray-600 dark:hover:text-gray-200 hover:underline"
-                        tabindex="0" role="link">Remark to {{ $item->employee->name }}</a>
+                        tabindex="0" role="link">Remark to {{ $item->employee->name ?? 'N/A' }}</a>
                     <p class="mt-2 text-gray-600 dark:text-gray-300">{{ $item->remark }}</p>
                 </div>
 
