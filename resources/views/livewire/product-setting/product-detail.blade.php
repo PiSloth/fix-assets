@@ -19,9 +19,16 @@
 
                     <div class="flex justify-center gap-4 py-4 overflow-x-auto">
                         @foreach ($product->images as $image)
-                            <img src="{{ Storage::url($image->image) }}" alt="Thumbnail 1"
-                                class="object-cover transition duration-300 rounded-md cursor-pointer size-16 sm:size-20 opacity-60 hover:opacity-100"
-                                onclick="changeImage(this.src)">
+                            <div class="relative overflow-hidden rounded-md cursor-pointer size-16 sm:size-20 group">
+                                <img src="{{ Storage::url($image->image) }}" alt="Image"
+                                    onclick="changeImage(this.src)"
+                                    class="object-cover w-full h-full transition duration-300 rounded-md opacity-60 group-hover:opacity-100">
+
+                                <button wire:click="deletePhotoConfirmation({{ $image->id }})"
+                                    class="absolute px-2 py-1 text-xs text-white transition duration-300 bg-red-400 rounded-md shadow-md opacity-0 top-2 right-2 group-hover:opacity-100">
+                                    x
+                                </button>
+                            </div>
                         @endforeach
                     </div>
                 </div>

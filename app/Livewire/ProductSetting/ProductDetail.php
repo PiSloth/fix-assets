@@ -9,9 +9,12 @@ use App\Models\ProductRemark;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use WireUi\Traits\WireUiActions;
 
 class ProductDetail extends Component
 {
+    use WireUiActions;
+
     #[Url(as: 'id')]
     public $product_id;
 
@@ -41,12 +44,52 @@ class ProductDetail extends Component
         $this->reset('remark');
     }
 
-    public function deletePhoto($photo_id)
+    // Confirm noti sent
+    public function deletePhotoConfirmation($photoId)
     {
-        $photo = ProductImage::find($photo_id);
-        $photo->delete();
+        $this->notification()->confirm([
+            'title' => 'Are you Sure?',
+            'description' => 'If you delete, this\'s your responsible.',
+            'icon' => 'question',
+            'accept' => [
+                'label' => 'Delete',
+                'method' => 'deletePhoto',
+                'params' => $photoId,
+            ],
+            'reject' => [
+                'label' => 'Not yet',
+                'method' => 'onClose',
+            ],
+            // 'onDismiss' => [
+            //     'method' => 'cancleConfirm',
+            //     'params' => ['event' => 'onDismiss'],
+            // ],
 
-        // deleteformdisk('product', $photo->image);
+        ]);
+    }
+
+    public function deletePhoto($id)
+    {
+        if (! auth()->user()->can('delete_product_photo')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $photo = ProductImage::findOrFail($id);
+
+        $photoCount = ProductImage::where('product_id', $photo->product_id)->count();
+
+        if ($photoCount == 1) {
+            $this->notification()->error('You can\'t delete the last photo.');
+
+            return;
+        }
+
+        $file = public_path('storage/'.$photo->image);
+        if (file_exists($file)) {
+            unlink($file);
+        }
+
+        $photo->delete();
     }
 
     #[Title('Read Product')]

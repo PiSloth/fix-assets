@@ -92,10 +92,22 @@
                         </td>
 
                         <td class="px-6 py-4">
-                            <x-wui-button label="add photo"
-                                wire:click="addProductModal({{ $item->id }},'{{ $item->name }}')" />
-                            <x-wui-button amber label="detial"
-                                href="{{ route('product-view', ['id' => $item->id]) }}" />
+
+                            <x-wui-button wire:click="addProductModal({{ $item->id }},'{{ $item->name }}')"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="8" x2="12" y2="16" />
+                                    <line x1="8" y1="12" x2="16" y2="12" />
+                                </svg></x-wui-button>
+                            <x-wui-button amber href="{{ route('product-view', ['id' => $item->id]) }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M4.5 6.75h15m-15 5.25h15m-15 5.25h15" />
+                                </svg>
+                            </x-wui-button>
                         </td>
                     </tr>
                 @empty
@@ -112,7 +124,7 @@
     <x-wui-modal-card title="New Product" name="newModal">
         <div class="grid grid-cols-1 gap-4 mb-2 sm:grid-cols-2">
             <x-wui-input label="Name" wire:model='name' placeholder="inspiron 310" />
-            <x-wui-input label="Serial No" wire:model='serial_no' placeholder="123456" />
+            <x-wui-input label="Serial No" wire:model='serial_number' placeholder="123456" />
         </div>
         <div class="grid-cols-1">
             <x-wui-textarea label="Description" wire:model='description' placeholder="Laptop" />
@@ -171,7 +183,7 @@
     </x-wui-modal-card>
 
     {{-- image upload modal  --}}
-    <x-wui-modal-card title="add photo" name="imageUpload">
+    <x-wui-modal-card title="Add Photo" name="imageUpload">
         <div class="grid grid-cols-1 gap-4 mb-2 sm:grid-cols-2">
             <span> {{ $product_name }}</span>
         </div>

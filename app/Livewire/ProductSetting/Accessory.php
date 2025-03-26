@@ -43,7 +43,9 @@ class Accessory extends Component
             $path = $this->image->store('images', 'tempublic');
         }
 
-        ModelsAccessory::create(array_merge(['image' => $path], $validated));
+        ModelsAccessory::create(array_merge([
+            'image' => $path,
+        ], $validated));
 
         $this->dispatch('closeModal', 'newModal');
         $this->reset('name', 'code', 'image', 'accessories_group_id');
