@@ -4,6 +4,7 @@ namespace App\Livewire\ProductSetting;
 
 use App\Models\Assembly;
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Models\ProductRemark;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
@@ -40,6 +41,15 @@ class ProductDetail extends Component
         $this->reset('remark');
     }
 
+    public function deletePhoto($photo_id)
+    {
+        $photo = ProductImage::find($photo_id);
+        $photo->delete();
+
+        // deleteformdisk('product', $photo->image);
+    }
+
+    #[Title('Read Product')]
     public function read()
     {
         $product = Product::find($this->product_id);
