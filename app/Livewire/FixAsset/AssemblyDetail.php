@@ -45,6 +45,8 @@ class AssemblyDetail extends Component
 
     public $images;
 
+    public $update_assembly_image;
+
     public function assign()
     {
         $this->validate([
@@ -118,6 +120,34 @@ class AssemblyDetail extends Component
 
         $this->dispatch('closeModal', 'imageUpload');
         $this->reset('image', 'product_id');
+    }
+
+    public function cancle_assembly_image()
+    {
+        $this->reset('update_assembly_image');
+    }
+
+    public function updateAssemblyImage()
+    {
+        $this->validate([
+            'update_assembly_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+        ]);
+        $assembly = Assembly::findOrFail($this->assembly_id);
+
+        $file = public_path('storage/'.$assembly->image);
+
+        if (file_exists($file)) {
+            unlink($file);
+        }
+
+        $path = $this->update_assembly_image->store('images', 'tempublic');
+
+        $assembly->update([
+            'image' => $path,
+        ]);
+
+        $this->dispatch('closeModal', 'assemblyImageUpload');
+        $this->reset('update_assembly_image');
     }
 
     public function viewPhotos($id, $name)
