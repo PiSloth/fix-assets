@@ -3,6 +3,8 @@
 namespace App\Livewire\FixAsset;
 
 use App\Models\Assembly;
+use App\Models\Branch;
+use App\Models\Department;
 use App\Models\Product;
 use App\Models\ProductImage;
 use Carbon\Carbon;
@@ -47,6 +49,16 @@ class AssemblyDetail extends Component
 
     public $update_assembly_image;
 
+    public $up_ass_name, $up_branch_id, $up_dep_id;
+
+    public function mount()
+    {
+        $assembly = Assembly::findOrFail($this->assembly_id);
+
+        $this->up_ass_name = $assembly->name;
+        $this->up_branch_id = $assembly->branch_id;
+        $this->up_dep_id = $assembly->department_id;
+    }
     public function assign()
     {
         $this->validate([
@@ -63,9 +75,28 @@ class AssemblyDetail extends Component
         $this->reset('employee_id');
     }
 
+    public function updateAssembly()
+    {
+        $this->validate([
+            'up_ass_name' => 'required',
+            'up_dep_id' => 'required',
+            'up_branch_id' => 'required'
+        ]);
+
+        $query = Assembly::findOrFail($this->assembly_id);
+
+        $query->update([
+            'name' => $this->up_ass_name,
+            'department_id' => $this->up_dep_id,
+            'branch_id' => $this->up_branch_id
+        ]);
+
+        $this->dispatch('closeModal', 'editAssemblyModal');
+    }
+
     public function create()
     {
-        $code = 'P'.Carbon::now()->format('ymdHis');
+        $code = 'P' . Carbon::now()->format('ymdHis');
         $this->validate([
             'name' => 'required',
             'description' => 'required',
@@ -96,6 +127,8 @@ class AssemblyDetail extends Component
         $this->dispatch('closeModal', 'newModal');
         $this->reset('name', 'serial_number', 'purchase_date', 'warranty_date', 'purchase_price', 'purchase_from', 'remark', 'description');
     }
+
+
 
     public function addProductModal($id, $name)
     {
@@ -134,7 +167,7 @@ class AssemblyDetail extends Component
         ]);
         $assembly = Assembly::findOrFail($this->assembly_id);
 
-        $file = public_path('storage/'.$assembly->image);
+        $file = public_path('storage/' . $assembly->image);
 
         if (file_exists($file)) {
             unlink($file);
@@ -169,6 +202,8 @@ class AssemblyDetail extends Component
         return view('livewire.fix-asset.assembly-detail', [
             'products' => Product::whereAssemblyId($this->assembly_id)->get(),
             'assembly' => Assembly::find($this->assembly_id),
+            'departments' => Department::all(),
+            'branches' => Branch::all(),
         ]);
     }
 }

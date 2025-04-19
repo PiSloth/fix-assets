@@ -9,6 +9,7 @@ use App\Livewire\Config\Setting\User;
 use App\Livewire\Config\Setting\UserPermission;
 use App\Livewire\FixAsset\AssemblyDetail;
 use App\Livewire\FixAsset\Asset;
+use App\Livewire\FixAsset\TransferAssembly;
 use App\Livewire\ProductSetting\Accessory;
 use App\Livewire\ProductSetting\AccessoryConfig;
 use App\Livewire\ProductSetting\ProductDetail;
@@ -88,6 +89,7 @@ Route::middleware(['auth'])->prefix('setting')->group(function () {
 Route::middleware(['auth'])->prefix('fix-asset')->group(function () {
     Route::get('/assets', Asset::class)->name('assets');
     Route::get('/assembly/detail', AssemblyDetail::class)->name('assembly.detail');
+    Route::get('/assembly/transfer', TransferAssembly::class)->name('assembly.transfer');
     // Route::get('/permission', UserPermission::class)->name('user-permission');
 });
 
@@ -99,4 +101,4 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

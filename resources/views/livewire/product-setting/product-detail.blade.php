@@ -86,7 +86,7 @@
                 </div>
             @endforeach
 
-            <form wire:submit='createReamrk'
+            <form wire:submit='createRemark'
                 class="p-4 rounded-lg shadow-md bg-slate-200 dark:bg-gray-500 dark:text-white">
                 <h3 class="mb-2 text-lg font-bold">Add a comment</h3>
                 <div class="mb-4">

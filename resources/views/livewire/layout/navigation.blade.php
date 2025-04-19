@@ -30,7 +30,7 @@ $logout = function (Logout $logout) {
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('accessory-config')" :active="request()->routeIs('accessory-config')">
+                    <x-nav-link :href="route('assets')" :active="request()->routeIs('assets')">
                         <x-company-name></x-company-name>
                     </x-nav-link>
                 </div>
@@ -96,7 +96,7 @@ $logout = function (Logout $logout) {
         </div>
         <!-- Company work out -->
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('accessory-config')" :active="request()->routeIs('accessory-config')" wire:navigate>
+            <x-responsive-nav-link :href="route('assets')" :active="request()->routeIs('assets')" wire:navigate>
                 <x-company-name></x-company-name>
             </x-responsive-nav-link>
         </div>

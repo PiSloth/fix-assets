@@ -8,8 +8,11 @@
             @if (!$assembly->employee_id)
                 <x-wui-button teal label="Responsible to" @click="$openModal('responsibleTo')" />
             @else
-                <x-wui-button stone label="Transfer to" @click="$openModal('transferToModal')" />
+                <x-wui-button stone label="Transfer to" href="{{ route('assembly.transfer', ['id' => $assembly_id]) }}" />
             @endif
+            @haspermission('edit_assembly')
+                <x-wui-button amber label="Edit Assem" @click="$openModal('editAssemblyModal')" />
+            @endhaspermission
 
         </div>
 
@@ -21,9 +24,8 @@
                     <div
                         class="space-y-8 text-center md:space-y-0 md:text-left md:space-x-16 md:justify-center md:flex md:items-center ">
                         <div class="w-full space-y-4 md:w-1/4">
-                            <h3 class="text-2xl font-medium">Header</h3>
+                            <h3 class="text-2xl font-medium">{{ $assembly->name ?? '' }}</h3>
                             <div class="grid grid-cols-1 gap-4 p-3 mb-2 bg-white rounded-lg dark:text-white">
-                                <span> Assembly: {{ $assembly->name ?? '' }}</span>
                                 <span> Code: {{ $assembly->code ?? '' }}</span>
                                 <span> Branch: {{ $assembly->branch->name ?? '' }}</span>
                                 <span> Department: {{ $assembly->department->name ?? '' }}</span>
@@ -155,7 +157,8 @@
                         <x-wui-input label="Serial No" wire:model='serial_number' placeholder="123456" />
                     </div>
                     <div class="grid-cols-1">
-                        <x-wui-textarea label="Description" wire:model='description' placeholder="Laptop" />
+                        <x-wui-textarea label="Description" wire:model='description'
+                            placeholder="i9 14 Gen with turbo boot!" />
                     </div>
                     <x-wui-textarea label="Remark" wire:model='remark' placeholder="All fine but ear jack fail" />
 
@@ -359,14 +362,38 @@
                             <x-wui-button primary label="Assign" wire:click="assign" />
                         </div>
                     </x-slot>
-
                 </x-wui-modal-card>
 
-                {{-- Edit modal  --}}
-                <x-wui-modal-card title="New Category" name="editModal">
+                {{-- Edit Assembly modal  --}}
+                <x-wui-modal-card title="Edit" name="editAssemblyModal">
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        <x-wui-input label="Name" wire:model='up_name' placeholder="eg. Humburger" />
-                        <x-wui-input label="Remark" wire:model='up_remark' placeholder="HM" />
+                        <x-wui-input label="Name" wire:model='up_ass_name' placeholder="{{ $assembly->name }}" />
+                        <div>
+                            <label for="branches"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select
+                                a Branch</label>
+                            <select id="branches" wire:model='up_branch_id'
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option selected>Brnach</option>
+                                @foreach ($branches as $branch)
+                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                @endforeach
+                            </select>
+                            <span class="text-sm text-red-500">{{ $errors->first('branch_id') }}</span>
+                        </div>
+                        <div>
+                            <label for="departments"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select
+                                a Department</label>
+                            <select id="departments" wire:model='up_dep_id'
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option selected>Department</option>
+                                @foreach ($departments as $department)
+                                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                @endforeach
+                            </select>
+                            <span class="text-sm text-red-500">{{ $errors->first('department_id') }}</span>
+                        </div>
                     </div>
 
                     <x-slot name="footer" class="flex justify-between gap-x-4">
@@ -374,7 +401,7 @@
 
                         <div class="flex gap-x-4">
                             <x-wui-button flat label="Cancel" x-on:click="close" />
-                            <x-wui-button primary label="Update" wire:click="update" />
+                            <x-wui-button primary label="Update" wire:click="updateAssembly" />
                         </div>
                     </x-slot>
                 </x-wui-modal-card>
