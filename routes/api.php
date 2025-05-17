@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Accessory\AssemblyController;
 use App\Http\Controllers\Api\Accounting\AccountController;
 use App\Http\Controllers\Api\Accounting\AccountTitleController;
 use App\Http\Controllers\Api\Acessory\Group;
@@ -32,6 +33,7 @@ Route::middleware([])->group(function () {
     Route::get('/accessories-group', Group::class)->name('api.accessories-group');
     Route::get('/accessory', Item::class)->name('api.accessory');
     Route::get('/employees', EmployeeController::class)->name('api.employees');
+    Route::get('/assemblies', AssemblyController::class)->name('api.assemblies');
 
     // Route::get('sub-categories', SubCategoryController::class)->name('api.sub-category');
     // Route::get('products', ProductController::class)->name('api.product');

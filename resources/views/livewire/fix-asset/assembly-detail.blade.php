@@ -123,21 +123,27 @@
                                     <td class="px-6 py-4">
 
                                         <x-wui-button
-                                            wire:click="addProductModal({{ $item->id }},'{{ $item->name }}')"><svg
+                                            wire:click="addProductModal({{ $item->id }},'{{ $item->name }}')"
+                                            icon="plus">
+                                            {{-- <svg
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <circle cx="12" cy="12" r="10" />
                                                 <line x1="12" y1="8" x2="12" y2="16" />
                                                 <line x1="8" y1="12" x2="16" y2="12" />
-                                            </svg></x-wui-button>
-                                        <x-wui-button amber href="{{ route('product-view', ['id' => $item->id]) }}">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            </svg> --}}
+                                        </x-wui-button>
+                                        <x-wui-button amber href="{{ route('product-view', ['id' => $item->id]) }}"
+                                            icon="information-circle">
+                                            {{-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M4.5 6.75h15m-15 5.25h15m-15 5.25h15" />
-                                            </svg>
+                                                    d="M4.5 6.75h15m-15 5.25h15m-15 5.25h15" /> --}}
+                                            {{-- </svg> --}}
                                         </x-wui-button>
+                                        <x-wui-button teal icon="arrow-right"
+                                            wire:click="initializeTransferModal({{ $item->id }})" />
                                     </td>
                                 </tr>
                             @empty
@@ -178,8 +184,8 @@
                                     </div>
                                 </div>
                                 <!-- Hidden file input -->
-                                <input wire:model="image" id="image" accept="image/jpeg,image/jpg"
-                                    type="file" x-ref="fileInput" class="hidden" />
+                                <input wire:model="image" id="image" accept="image/jpeg,image/jpg" type="file"
+                                    x-ref="fileInput" class="hidden" />
                             </div>
                         @endif
 
@@ -428,6 +434,25 @@
                         </div>
                     </form>
                 </x-modal>
+
+                {{-- Trnasfer modal  --}}
+                <x-wui-modal-card title="ပစ္စည်း နေရာ ပြောင်းရွေးခြင်း" name="transferModal">
+                    <div class="grid grid-cols-1 gap-4 mb-2 sm:grid-cols-2">
+                        <x-wui-select label="Transfer to" placeholder="m u t u" :async-data="route('api.assemblies')" option-label="name"
+                            option-value="id" wire:model='transfered_assembly_id' />
+                    </div>
+
+                    <x-wui-textarea label="Remark" wire:model="remark" />
+
+                    <x-slot name="footer" class="flex justify-between gap-x-4">
+                        <x-wui-button flat negative label="Delete" x-on:click="$closeModal('responsibleTo')" />
+
+                        <div class="flex gap-x-4">
+                            <x-wui-button flat label="Cancel" x-on:click="close" />
+                            <x-wui-button primary label="Transfer" wire:click="transfer" />
+                        </div>
+                    </x-slot>
+                </x-wui-modal-card>
             </div>
 
             <script>

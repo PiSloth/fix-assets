@@ -7,6 +7,7 @@ use App\Models\Branch;
 use App\Models\Department;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\StockTransfer;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
@@ -50,6 +51,8 @@ class AssemblyDetail extends Component
     public $update_assembly_image;
 
     public $up_ass_name, $up_branch_id, $up_dep_id;
+
+    public $transfered_assembly_id;
 
     public function mount()
     {
@@ -194,6 +197,36 @@ class AssemblyDetail extends Component
     public function cancle_image()
     {
         $this->reset('image');
+    }
+
+    //initialize trasfer modal
+    public function initializeTransferModal($id)
+    {
+        $this->product_id = $id;
+        $this->dispatch('openModal', 'transferModal');
+    }
+
+    //product transfer
+    public function transfer()
+    {
+        DB::transaction(function () {
+            $query = Product::find($this->product_id);
+
+            $query->update([
+                'assembly_id' => $this->transfered_assembly_id
+            ]);
+
+            StockTransfer::create([
+                'product_id' => $this->product_id,
+                'user_id' => auth()->user()->id,
+                'original_assembly_id' => $this->assembly_id,
+                'transfered_assembly_id' => $this->transfered_assembly_id,
+                'remark' => $this->remark
+            ]);
+        });
+
+        $this->reset('product_id', 'remark', 'transfered_assembly_id');
+        $this->dispatch('closeModal', 'transferModal');
     }
 
     #[Title('Assembly Detail')]

@@ -39,6 +39,7 @@ class Asset extends Component
     public $image;
 
     public $department_filter;
+    public $search;
 
     public function create()
     {
@@ -54,7 +55,7 @@ class Asset extends Component
         ]);
 
         $department = Department::find($this->department_id);
-        $code = $department->short_name.'-'.Carbon::now()->format('jmy-His');
+        $code = $department->short_name . '-' . Carbon::now()->format('jmy-His');
 
         $path = $this->image->store('images', 'tempublic');
         // dd($path);
@@ -114,6 +115,10 @@ class Asset extends Component
         $assembly = Assembly::select('assemblies.*')
             ->when($this->department_filter, function ($query) {
                 $query->where('department_id', $this->department_filter);
+            })
+            ->when($this->search, function ($query) {
+                $query->where('name', 'like', "%{$this->search}%")
+                    ->orWhere('code', 'like', "%{$this->search}%");
             })
             ->paginate(10);
 

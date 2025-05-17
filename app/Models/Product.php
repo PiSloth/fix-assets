@@ -20,4 +20,9 @@ class Product extends Model
     {
         return $this->hasMany(ProductRemark::class);
     }
+
+    public function stockTransfer()
+    {
+        return $this->hasMany(StockTransfer::class);
+    }
 }

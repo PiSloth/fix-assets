@@ -81,10 +81,20 @@
             @foreach ($product->remarks as $comment)
                 <div class="p-4 bg-white rounded-lg shadow-md">
                     <h3 class="text-lg font-bold">{{ $comment->employee->name }}</h3>
-                    <p class="mb-2 text-sm text-gray-700">Posted on {{ $comment->created_at }}</p>
+                    <p class="mb-2 text-sm text-gray-700">Posted on ({{ $comment->created_at->format('j M y') }})</p>
                     <p class="text-gray-700">{{ $comment->remark }}</p>
                 </div>
             @endforeach
+
+            @forelse ($product->stockTransfer as $item)
+                <div class="p-4 bg-pink-300 rounded-lg shadow-md">
+                    <h3 class="text-lg font-bold">{{ $item->user->name }}</h3>
+                    <p class="mb-2 text-sm text-gray-700">Transfered on ({{ $item->created_at->format('j M y') }})</p>
+                    <p class="text-gray-700">{{ $item->remark }}</p>
+                </div>
+            @empty
+                <p class="text-gray-400">Not transfer record</p>
+            @endforelse
 
             <form wire:submit='createRemark'
                 class="p-4 rounded-lg shadow-md bg-slate-200 dark:bg-gray-500 dark:text-white">
