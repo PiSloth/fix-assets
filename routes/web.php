@@ -9,6 +9,7 @@ use App\Livewire\Config\Setting\User;
 use App\Livewire\Config\Setting\UserPermission;
 use App\Livewire\FixAsset\AssemblyDetail;
 use App\Livewire\FixAsset\Asset;
+use App\Livewire\FixAsset\OwnershipPreview;
 use App\Livewire\FixAsset\TransferAssembly;
 use App\Livewire\ProductSetting\Accessory;
 use App\Livewire\ProductSetting\AccessoryConfig;
@@ -90,6 +91,7 @@ Route::middleware(['auth'])->prefix('fix-asset')->group(function () {
     Route::get('/assets', Asset::class)->name('assets');
     Route::get('/assembly/detail', AssemblyDetail::class)->name('assembly.detail');
     Route::get('/assembly/transfer', TransferAssembly::class)->name('assembly.transfer');
+    Route::get('/asset/ownership', OwnershipPreview::class)->name('ownership.preview');
     // Route::get('/permission', UserPermission::class)->name('user-permission');
 });
 

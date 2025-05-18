@@ -188,6 +188,7 @@ class AssemblyDetail extends Component
 
     public function viewPhotos($id, $name)
     {
+        dd("Hello");
         $this->product_name = $name;
         $this->images = ProductImage::whereProductId($id)->get();
 
