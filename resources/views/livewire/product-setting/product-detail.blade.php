@@ -35,6 +35,10 @@
 
                 <!-- Product Details -->
                 <div class="w-full px-4 md:w-1/2">
+                    <div>
+                        <div class="">{!! DNS2D::getBarcodeHTML("$product->code", 'QRCODE') !!}</div>
+                        <span> {{ $product->code ?? '' }}</span>
+                    </div>
                     <h2 class="mb-2 text-3xl font-bold">{{ $product->name }}</h2>
                     <p class="mb-4 text-gray-600">{{ $product->serial_number ?? 'S/N' }}</p>
                     <div class="mb-4">

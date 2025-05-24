@@ -24,9 +24,13 @@
                 <div
                     class="space-y-8 text-center md:space-y-0 md:text-left md:space-x-16 md:justify-center md:flex md:items-center ">
                     <div class="w-full space-y-4 md:w-1/4">
+                        <div>
+                            <div class="">{!! DNS2D::getBarcodeHTML("$assembly->code", 'QRCODE') !!}</div>
+                            <span> {{ $assembly->code ?? '' }}</span>
+                        </div>
                         <h3 class="text-2xl font-medium">{{ $assembly->name ?? '' }}</h3>
                         <div class="grid grid-cols-1 gap-4 p-3 mb-2 bg-white rounded-lg dark:text-white">
-                            <span> Code: {{ $assembly->code ?? '' }}</span>
+
                             <span> Branch: {{ $assembly->branch->name ?? '' }}</span>
                             <span> Department: {{ $assembly->department->name ?? '' }}</span>
                             @if ($assembly->employee_id)
@@ -131,7 +135,9 @@
         <div class="max-w-4xl p-6 mx-auto mb-10 border rounded-lg shadow">
             <h2 class="mb-4 text-xl font-semibold">Employee Information</h2>
             <div class="grid grid-cols-2 gap-4">
-                <div><strong>Code :</strong>{{ $assembly->code ?? '' }}</div>
+                <div>
+                    <strong>Code :</strong>{{ $assembly->code ?? '' }}
+                </div>
                 <div><strong>Location :</strong>{{ $assembly->branch->name ?? '' }}</div>
                 <div><strong>Department :</strong>{{ $assembly->department->name ?? '' }}</div>
                 @if ($assembly->employee_id)

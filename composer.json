@@ -15,6 +15,7 @@
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.4",
         "livewire/volt": "^1.0",
+        "milon/barcode": "^12.0",
         "mpdf/mpdf": "8.2.1",
         "rabbit-converter/rabbit-php": "dev-master",
         "spatie/browsershot": "^5.0",
