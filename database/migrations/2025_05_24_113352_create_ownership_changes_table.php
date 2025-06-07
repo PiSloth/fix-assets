@@ -11,16 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stock_transfers', function (Blueprint $table) {
+        Schema::create('ownership_changes', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('ownby_id')->nullable()->constrained();
+            $table->unsignedBigInteger('transferto_id')->nullable()->constrained();
+            $table->unsignedBigInteger('changer_id')->constrained();
             $table->foreignId('product_id')->constrained();
-            $table->foreignId('user_id')->constrained();
-            $table->string('remark')->nullable();
+            $table->foreignId('assembly_id')->constrained();
             $table->unsignedBigInteger('original_assembly_id')->constrained();
             $table->unsignedBigInteger('transfered_assembly_id')->constrained();
+            $table->string('reason');
+
             $table->foreign('original_assembly_id')->references('id')->on('assemblies')->onDelete('cascade');
             $table->foreign('transfered_assembly_id')->references('id')->on('assemblies')->onDelete('cascade');
-            $table->timestamps();
+            $table->foreign('ownby_id')->references('id')->on('users');
+            $table->foreign('transferto_id')->references('id')->on('users');
+            $table->foreign('changer_id')->references('id')->on('users');
+            $table->$table->timestamps();
         });
     }
 
@@ -29,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stock_transfers');
+        Schema::dropIfExists('ownership_changes');
     }
 };

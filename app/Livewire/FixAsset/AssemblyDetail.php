@@ -233,11 +233,16 @@ class AssemblyDetail extends Component
     #[Title('Assembly Detail')]
     public function render()
     {
+        $transfers = StockTransfer::where("original_assembly_id", '=', $this->assembly_id)->get();
+
+
+
         return view('livewire.fix-asset.assembly-detail', [
             'products' => Product::whereAssemblyId($this->assembly_id)->get(),
             'assembly' => Assembly::find($this->assembly_id),
             'departments' => Department::all(),
             'branches' => Branch::all(),
+            'transfers' => $transfers,
         ]);
     }
 }

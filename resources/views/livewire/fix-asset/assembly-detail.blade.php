@@ -15,7 +15,12 @@
         {{-- <x-wui-button chan label="Print" href="{{ route('ownership.preview', ['id' => $assembly_id]) }}" /> --}}
         <x-wui-button chan label="List View" @click="open= !open" />
 
+        <button class="px-3 py-1 text-gray-600 underline rounded shadow-lg cursor-pointer filter hover:text-blue-600"
+            @click="open = true">
+            info
+        </button>
     </div>
+
 
     {{-- Assembly Cober --}}
     <div class="bg-gray-50" x-show="!open">
@@ -491,7 +496,27 @@
             </div>
         </x-slot>
     </x-wui-modal-card>
+
+    {{-- filter for assembly --}}
+    <x-filter-sidebar>
+        <!-- Department Filter -->
+        <div class="mt-4">
+            @foreach ($transfers as $item)
+                <div>
+                    <img class="w-10 h-10 rounded-full"
+                        src="{{ asset('storage/' . $item->product->images->first()->image) }}" />
+                    <a href="#" class="text-gray-700">{{ $item->product->code }}</a>
+                    <a href="{{ route('assembly.detail', ['id' => $item->transfered_assembly_id]) }}"> =>
+                        <span class="text-pink-400">{{ $item->transferedAssembly->code }}</span></a>
+                    <span class="italic text-gray-400">Transfer at {{ $item->created_at }}</span> By
+                    <span class="text-blue-400">{{ $item->user->name }}</span>
+                </div>
+                <hr />
+            @endforeach
+        </div>
+    </x-filter-sidebar>
 </div>
+
 
 <script>
     Livewire.on('closeModal', (name) => {

@@ -15,4 +15,12 @@ class StockTransfer extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+    public function transferedAssembly()
+    {
+        return $this->belongsTo(Assembly::class);
+    }
 }
