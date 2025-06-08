@@ -21,6 +21,8 @@ class ProductDetail extends Component
     public $employee_id;
 
     public $remark;
+    public $up_product_name, $up_product_desc, $up_product_serial;
+    public $purchase_price, $purchase_date, $warranty_date;
 
     public function mount()
     {
@@ -84,7 +86,7 @@ class ProductDetail extends Component
             return;
         }
 
-        $file = public_path('storage/'.$photo->image);
+        $file = public_path('storage/' . $photo->image);
         if (file_exists($file)) {
             unlink($file);
         }
@@ -104,6 +106,47 @@ class ProductDetail extends Component
         } else {
             $this->employee_id = $emp_data;
         }
+    }
+
+    public function setUpdateData()
+    {
+        $product = Product::find($this->product_id);
+        $this->up_product_name = $product->name;
+        $this->up_product_desc = $product->description;
+        $this->up_product_serial = $product->serial_number;
+
+        $this->dispatch('openModal', 'editProductModal');
+    }
+
+    public function update()
+    {
+        $this->validate([
+            'up_product_name' => 'required',
+            'up_product_desc' => 'required',
+            'up_product_serial' => 'nullable'
+        ]);
+
+        Product::find($this->product_id)->update([
+            'name' => $this->up_product_name,
+            'description' => $this->up_product_desc,
+            'serial_number' => $this->up_product_serial,
+        ]);
+
+        $this->dispatch('closeModal', 'editProductModal');
+        $this->reset('up_product_name', 'up_product_desc', 'up_product_serial');
+    }
+
+    public function updatePurchaseInfo()
+    {
+        $validated =  $this->validate([
+            'purchase_price' => 'required',
+            'purchase_date' => 'required',
+            'warranty_date' => 'nullable'
+        ]);
+        Product::find($this->product_id)->update($validated);
+
+        $this->reset('purchase_price', 'purchase_date', 'warranty_date');
+        $this->dispatch('closeModal', 'purchaseModal');
     }
 
     #[Title('Product Detail')]

@@ -4,6 +4,12 @@
             <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                 {{ __('Detail') }}
             </h2>
+            @haspermission('edit_assembly')
+                <x-wui-button lemon label="Edit Product" wire:click='setUpdateData' />
+            @endhaspermission
+            @if ($product->purchase_price == 0)
+                <x-wui-button teal label="Purchase info" @click="$openModal('purchaseModal')" />
+            @endif
             {{-- <x-wui-button label="Remark" @click="$openModal('newModal')" /> --}}
         </div>
     </div>
@@ -66,18 +72,17 @@
                         <h3 class="mb-2 text-lg font-semibold">Product Remark</h3>
                         <ul class="text-gray-700 list-disc list-inside">
                             <li>{{ $product->remark }}</li>
-                            {{-- <li>30-hour battery life</li>
-                            <li>Touch sensor controls</li>
-                            <li>Speak-to-chat technology</li> --}}
+                            {{-- {{-- <li>30-hour battery life</li> --}}
+                            <li>Purchase at
+                                {{ \Carbon\Carbon::parse($product->purchase_date)->format('j M, y') ?? '-' }}</li>
+                            <li>Warranty expire at
+                                {{ \Carbon\Carbon::parse($product->warranty_date)->format('j M, y') ?? '-' }}</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
-
 
     <div class="p-6 bg-gray-100">
         <h2 class="mb-4 text-lg font-bold">Comments</h2>
@@ -128,10 +133,58 @@
             </form>
         </div>
     </div>
+
+    {{-- Edit Product modal  --}}
+    <x-wui-modal-card title="Product Info Update" name="editProductModal">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <x-wui-input label="Name" wire:model='up_product_name' placeholder="{{ $product->name }}" />
+            <x-wui-input label="Description" wire:model='up_product_desc' placeholder="{{ $product->description }}" />
+            <x-wui-input label="Serial Number" wire:model='up_product_serial'
+                placeholder="{{ $product->serial_number }}" />
+        </div>
+
+        <x-slot name="footer" class="flex justify-between gap-x-4">
+            <x-wui-button flat negative label="Delete" x-on:click="$closeModal('editModal')" />
+
+            <div class="flex gap-x-4">
+                <x-wui-button flat label="Cancel" x-on:click="close" />
+                <x-wui-button primary label="Update" wire:click="update" />
+            </div>
+        </x-slot>
+    </x-wui-modal-card>
+
+    {{-- Purchase modal  --}}
+    <x-wui-modal-card title="Purchase Info" name="purchaseModal">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <x-wui-currency prefix="MMK" label="Price" wire:model='purchase_price'
+                placeholder="{{ $product->purchase_price }}" />
+            <x-wui-datetime-picker wire:model="purchase_date" label="Purchase Date" placeholder="Purchase Date"
+                without-timezone without-time="true" />
+            <x-wui-datetime-picker wire:model="warranty_date" label="Warranty Expired Date"
+                placeholder="Warranty Date" without-timezone without-time="true" />
+        </div>
+
+        <x-slot name="footer" class="flex justify-between gap-x-4">
+            <x-wui-button flat negative label="Delete" x-on:click="close" />
+
+            <div class="flex gap-x-4">
+                <x-wui-button flat label="Cancel" x-on:click="close" />
+                <x-wui-button primary label="Update" wire:click="updatePurchaseInfo" />
+            </div>
+        </x-slot>
+    </x-wui-modal-card>
 </div>
 
 <script>
     function changeImage(src) {
         document.getElementById('mainImage').src = src;
     }
+
+    Livewire.on('closeModal', (name) => {
+        $closeModal(name);
+    });
+
+    Livewire.on('openModal', (name) => {
+        $openModal(name);
+    });
 </script>
