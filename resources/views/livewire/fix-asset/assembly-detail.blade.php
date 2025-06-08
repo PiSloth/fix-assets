@@ -19,6 +19,7 @@
             @click="open = true">
             info
         </button>
+        <x-wui-button teal href="/pdf/{{$assembly_id}}" label="PDF" />
     </div>
 
 

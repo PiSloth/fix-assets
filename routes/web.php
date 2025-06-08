@@ -36,7 +36,7 @@ use Spatie\Browsershot\Browsershot;
 
 Route::view('/', 'welcome');
 
-Route::get('/pdf/{id}', [InvoiceController::class, 'generateInvoice']);
+Route::get('/pdf/{id}', [InvoiceController::class, 'ownership']);
 // Route::get('/pdf', function () {
 
 // $mpdf = new mPDF();
