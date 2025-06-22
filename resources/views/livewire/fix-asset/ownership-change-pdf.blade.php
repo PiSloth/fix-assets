@@ -99,7 +99,6 @@
     <caption>{{ $data['title']['text'] }}</caption>
     <span>{{ \Rabbit::uni2zg('ရက်စွဲ') }}: {{ \Carbon\Carbon::now()->format('j M y') }}</span>
 
-
     <table width="100%" cellpadding="10" cellspacing="0" border="0" style="margin-bottom: 20px;">
         <tr>
             <!-- Left Info -->
@@ -120,6 +119,31 @@
             </td>
         </tr>
     </table>
+    {{-- New Owner --}}
+    <table width="100%" cellpadding="10" cellspacing="0" border="0" style="margin-bottom: 20px;">
+        <tr>
+            <!-- Left Info -->
+            <td width="50%" valign="top" style="border: 1px solid #ccc; background-color: #f9f9f9;">
+                <strong>New Owner:</strong> {{ $data['newOwner']['name'] }}<br>
+                <strong>ID:</strong> {{ $data['newOwner']['stt_id'] }}<br>
+                <strong>Department:</strong> {{ $data['newOwner']['department'] }}<br>
+                <strong>Position:</strong> {{ $data['newOwner']['position'] }}<br>
+                <strong>Phone:</strong> {{ $data['newOwner']['phone'] }}
+            </td>
+            <!-- Approver Info -->
+            <td width="50%" valign="top" style="border: 1px solid #ccc; background-color: #f9f9f9;">
+                <strong>Approver:</strong> {{ $data['approver']['name'] }}<br>
+                <strong>Email:</strong> {{ $data['approver']['email'] }}
+                {{-- <strong>ID:</strong> {{ $data['newOwner']['stt_id'] }}<br> --}}
+                {{-- <strong>Department:</strong> {{ $data['newOwner']['department'] }}<br> --}}
+                {{-- <strong>Position:</strong> {{ $data['newOwner']['position'] }}<br> --}}
+            </td>
+        </tr>
+    </table>
+
+    <p>
+        <strong>{{ $data['newOwner']['termto'] }} : </strong> {{ $data['newOwner']['reason'] }}
+    </p>
 
     <table>
         <thead>
@@ -148,7 +172,7 @@
     <table width="100%" cellpadding="10" cellspacing="0" border="0">
         <tr>
             <td align="center" width="33%">
-                <strong>{{ \Rabbit::uni2zg('စာရင်းထည့်သွင်းသူ') }}</strong><br><br><br><br>
+                <strong>{{ \Rabbit::uni2zg('လွှဲပြောင်းသူ') }}</strong><br><br><br><br>
                 ________________________<br>
 
 
@@ -159,8 +183,7 @@
 
             </td>
             <td align="center" width="33%">
-                <strong>
-                    {{ \Rabbit::uni2zg('တာဝန်ခံ') }}</strong><br><br><br><br>
+                <strong>{{ \Rabbit::uni2zg('လက်ခံသူ တာဝန်ခံ') }}</strong><br><br><br><br>
                 ________________________<br>
 
             </td>

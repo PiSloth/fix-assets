@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Accounting\AccountTitleController;
 use App\Http\Controllers\Api\Acessory\Group;
 use App\Http\Controllers\Api\Acessory\Item;
 use App\Http\Controllers\Api\Company\EmployeeController;
+use App\Http\Controllers\Api\Company\UserController;
 use App\Http\Controllers\Api\Config\ItemLocationController;
 use App\Http\Controllers\Api\Config\PaymentMethodController;
 use App\Http\Controllers\Api\Config\ProductController;
@@ -34,6 +35,7 @@ Route::middleware([])->group(function () {
     Route::get('/accessory', Item::class)->name('api.accessory');
     Route::get('/employees', EmployeeController::class)->name('api.employees');
     Route::get('/assemblies', AssemblyController::class)->name('api.assemblies');
+    Route::get('/users', UserController::class)->name('api.users');
 
     // Route::get('sub-categories', SubCategoryController::class)->name('api.sub-category');
     // Route::get('products', ProductController::class)->name('api.product');

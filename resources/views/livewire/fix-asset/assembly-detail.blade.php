@@ -7,24 +7,22 @@
         @if (!$assembly->employee_id)
             <x-wui-button teal label="Responsible to" @click="$openModal('responsibleTo')" />
         @else
-            <x-wui-button stone label="Transfer to" href="{{ route('assembly.transfer', ['id' => $assembly_id]) }}" />
+            <x-wui-button stone label="Transfer to" @click="$openModal('ownershipModal')" />
         @endif
         @haspermission('edit_assembly')
             <x-wui-button amber label="Edit Assem" @click="$openModal('editAssemblyModal')" />
         @endhaspermission
-        {{-- <x-wui-button chan label="Print" href="{{ route('ownership.preview', ['id' => $assembly_id]) }}" /> --}}
-        <x-wui-button chan label="List View" @click="open= !open" />
 
         <button class="px-3 py-1 text-gray-600 underline rounded shadow-lg cursor-pointer filter hover:text-blue-600"
             @click="open = true">
             info
         </button>
-        <x-wui-button teal href="/pdf/{{$assembly_id}}" label="PDF" />
+        <x-wui-button teal href="/pdf/{{ $assembly_id }}" label="PDF" />
     </div>
 
 
     {{-- Assembly Cober --}}
-    <div class="bg-gray-50" x-show="!open">
+    <div class="bg-gray-50">
         <div class="w-11/12 py-8 m-auto md:py-16 lg:w-10/12 xl:w-1200">
             <div class="space-y-16">
                 <div
@@ -133,7 +131,8 @@
 
         </div>
     </div>
-    <div x-show="open">
+
+    <div class="hidden">
         {{-- Template --}}
         <h1 class="mb-4 text-3xl font-bold text-center">Asset Ownership Form</h1>
 
@@ -498,9 +497,64 @@
         </x-slot>
     </x-wui-modal-card>
 
+    {{-- Ownership change modal --}}
+    <x-wui-modal-card title="ပစ္စည်းတာဝန် လွှဲပြောင်းခြင်း" name="ownershipModal">
+        <div class="grid grid-cols-1 gap-4 mb-2 sm:grid-cols-2">
+            <x-wui-select label="Request to" placeholder="Approver" :async-data="route('api.users')" option-label="info"
+                option-value="id" wire:model='approver_id' />
+            <x-wui-input disabled value="{{ $assembly->employee->name }}" label="Own By" />
+            <x-wui-input disabled wire:model='transferby_id' value="{{ $assembly->employee->name }}"
+                label="Transfer By" />
+            <x-wui-select label="Responsible to" placeholder="Hand over to" :async-data="route('api.employees')" option-label="name"
+                option-value="id" wire:model='transferto_id' />
+        </div>
+
+        <x-wui-textarea label="Reason" wire:model="reason" />
+
+        <x-slot name="footer" class="flex justify-between gap-x-4">
+            <x-wui-button flat negative label="Delete" x-on:click="$closeModal('ownershipModal')" />
+
+            <div class="flex gap-x-4">
+                <x-wui-button flat label="Cancel" x-on:click="close" />
+                <x-wui-button primary label="Shift Owner" wire:click="ownerChange" />
+            </div>
+        </x-slot>
+    </x-wui-modal-card>
+
+    <x-wui-modal-card title="ပစ္စည်းတာဝန် လွှဲပြောင်းခြင်း အတည်ပြုမည်" name="approverModal">
+        <div class="grid grid-cols-1">
+            @if ($ownership_request)
+                <div>
+                    <span class="font-bold ">Owner :</span> {{ $ownership_request['ownby'] }}
+                </div>
+                <div>
+                    <span class="font-bold ">Transfer to :</span> {{ $ownership_request['transferto'] }}
+                </div>
+                <div>
+                    <span class="font-bold ">Approver :</span> {{ $ownership_request['approver'] }}
+                </div>
+                <div>
+                    <span class="font-bold ">Post by : </span> {{ $ownership_request['postby'] }}
+                </div>
+                <div class="p-2 mt-2 rounded bg-slate-100">
+                    <span class="font-bold ">{{ $ownership_request['reason'] }}</span>
+                </div>
+            @endif
+        </div>
+        <x-slot name="footer" class="flex justify-between gap-x-4">
+            <x-wui-button flat negative label="Reject" wire:click='rejectChanges' />
+
+            <div class="flex gap-x-4">
+                <x-wui-button flat label="Cancel" x-on:click="close" />
+                <x-wui-button green label="Accept" wire:click="approveChanges" />
+            </div>
+        </x-slot>
+
+    </x-wui-modal-card>
+
     {{-- filter for assembly --}}
-    <x-filter-sidebar>
-        <!-- Department Filter -->
+    <x-filter-sidebar title="Transaction Histories">
+        <!-- Product Transfer Histories -->
         <div class="mt-4">
             @foreach ($transfers as $item)
                 <div>
@@ -511,6 +565,37 @@
                         <span class="text-pink-400">{{ $item->transferedAssembly->code }}</span></a>
                     <span class="italic text-gray-400">Transfer at {{ $item->created_at }}</span> By
                     <span class="text-blue-400">{{ $item->user->name }}</span>
+                </div>
+                <hr />
+            @endforeach
+        </div>
+        {{-- Ownership changes histories --}}
+        <div class="mt-4">
+            @foreach ($ownership_changes as $item)
+                <div class="p-4 mb-2 rounded shadow-sm bg-slate-100 hover:cursor-pointer">
+                    <span @click="open = false"
+                        wire:click='readOwnership({{ $item->id }})'>{{ $item->transferby->name }} posted to
+                        transfer this assembly from
+                        {{ $item->ownby->name }}
+                        to {{ $item->transferto->name }}.</span>
+
+                    <br />
+
+                    <span class="italic text-gray-400">{{ $item->created_at->format('j M y') }}</span> Request to
+                    <span class="text-blue-400"> {{ $item->approver->name }}</span>
+
+                    @if ($item->status == 'approve')
+                        <span
+                            class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-green-900 dark:text-green-300">{{ $item->status }}</span>
+                    @elseif($item->status == 'reject')
+                        <span
+                            class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-red-900 dark:text-red-300">{{ $item->status }}</span>
+                    @else
+                        <span
+                            class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-yellow-900 dark:text-yellow-300">{{ $item->status }}</span>
+                    @endif
+                    <x-wui-mini-button rounded icon="bookmark" flat gray hover:outline.negative focus:solid.positive
+                        href="/pdf/ownership/{{ $item->id }}" />
                 </div>
                 <hr />
             @endforeach

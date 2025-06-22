@@ -5,6 +5,7 @@ namespace App\Livewire\FixAsset;
 use App\Models\Assembly;
 use App\Models\Branch;
 use App\Models\Department;
+use App\Models\OwnershipChange;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\StockTransfer;
@@ -14,10 +15,12 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use WireUi\Traits\WireUiActions;
 
 class AssemblyDetail extends Component
 {
     use WithFileUploads;
+    use WireUiActions;
 
     #[Url(as: 'id')]
     public $assembly_id;
@@ -53,6 +56,11 @@ class AssemblyDetail extends Component
     public $up_ass_name, $up_branch_id, $up_dep_id;
 
     public $transfered_assembly_id;
+
+    public $ownby_id, $transferto_id, $approver_id, $reason;
+
+    public $ownership_request;
+
 
     public function mount()
     {
@@ -230,11 +238,102 @@ class AssemblyDetail extends Component
         $this->dispatch('closeModal', 'transferModal');
     }
 
+    public function ownerChange()
+    {
+        $assembly = Assembly::findOrFail($this->assembly_id);
+
+        $this->validate([
+            'transferto_id' => 'required',
+            'approver_id' => 'required',
+            'reason' => 'required',
+        ]);
+
+        DB::transaction(function () use ($assembly) {
+            OwnershipChange::create([
+                'ownby_id' => $assembly->employee->id,
+                'transferto_id' => $this->transferto_id,
+                'approver_id' => $this->approver_id,
+                'transferby_id' => auth()->user()->id,
+                'assembly_id' => $this->assembly_id,
+                'reason' => $this->reason,
+            ]);
+        });
+
+        $this->reset('transferto_id', 'approver_id', 'reason');
+        $this->dispatch('closeModal', 'ownershipModal');
+    }
+
+    // Ownership history read
+
+    public function readOwnership($id)
+    {
+        $query = OwnershipChange::find($id);
+
+        $this->ownership_request = [
+            'id' => $query->id,
+            'ownby' => $query->ownby->name,
+            'transferto' => $query->transferto->name,
+            'postby' => $query->transferby->name,
+            'approver' => $query->approver->name,
+            'reason' => $query->reason,
+        ];
+
+        $this->dispatch('openModal', 'approverModal');
+    }
+
+    public function approveChanges()
+    {
+
+        $query = OwnershipChange::find($this->ownership_request['id']);
+        $assembly = Assembly::find($this->assembly_id);
+
+        if ($query->approver_id !== auth()->user()->id) {
+            $this->notification()->send([
+                'icon' => 'info',
+                'title' => 'Unauthorized',
+                'description' => 'You are not allowed to edit!',
+            ]);
+            return;
+        }
+
+        DB::transaction(function () use ($query, $assembly) {
+            $query->update([
+                'status' => 'approve'
+            ]);
+
+            $assembly->update([
+                'employee_id' => $query->transferto_id
+            ]);
+        });
+
+        $this->dispatch('closeModal', 'approveModal');
+    }
+
+    public function rejectChanges()
+    {
+        $query =   OwnershipChange::find($this->ownership_request['id']);
+
+        if ($query->approver_id !== auth()->user()->id) {
+            $this->notification()->send([
+                'icon' => 'info',
+                'title' => 'Unauthorized',
+                'description' => 'You are not allowed to edit!',
+            ]);
+            return;
+        }
+
+        $query->update([
+            'status' => 'reject'
+        ]);
+
+        $this->dispatch('closeModal', 'approveModal');
+    }
+
     #[Title('Assembly Detail')]
     public function render()
     {
         $transfers = StockTransfer::where("original_assembly_id", '=', $this->assembly_id)->get();
-
+        $ownership_changes = OwnershipChange::where('assembly_id', '=', $this->assembly_id)->get();
 
 
         return view('livewire.fix-asset.assembly-detail', [
@@ -243,6 +342,7 @@ class AssemblyDetail extends Component
             'departments' => Department::all(),
             'branches' => Branch::all(),
             'transfers' => $transfers,
+            'ownership_changes' => $ownership_changes,
         ]);
     }
 }

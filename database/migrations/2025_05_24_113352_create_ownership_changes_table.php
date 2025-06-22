@@ -13,21 +13,14 @@ return new class extends Migration
     {
         Schema::create('ownership_changes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('ownby_id')->nullable()->constrained();
-            $table->unsignedBigInteger('transferto_id')->nullable()->constrained();
-            $table->unsignedBigInteger('changer_id')->constrained();
-            $table->foreignId('product_id')->constrained();
+            $table->foreignId('ownby_id')->nullable()->constrained('employees');
+            $table->foreignId('transferto_id')->nullable()->constrained('employees');
+            $table->foreignId('transferby_id')->constrained('users');
+            $table->foreignId('approver_id')->constrained('users');
+            $table->string('status')->default('pending');
             $table->foreignId('assembly_id')->constrained();
-            $table->unsignedBigInteger('original_assembly_id')->constrained();
-            $table->unsignedBigInteger('transfered_assembly_id')->constrained();
             $table->string('reason');
-
-            $table->foreign('original_assembly_id')->references('id')->on('assemblies')->onDelete('cascade');
-            $table->foreign('transfered_assembly_id')->references('id')->on('assemblies')->onDelete('cascade');
-            $table->foreign('ownby_id')->references('id')->on('users');
-            $table->foreign('transferto_id')->references('id')->on('users');
-            $table->foreign('changer_id')->references('id')->on('users');
-            $table->$table->timestamps();
+            $table->timestamps();
         });
     }
 

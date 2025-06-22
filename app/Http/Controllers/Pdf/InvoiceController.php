@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Pdf;
 
 use App\Http\Controllers\Controller;
 use App\Models\Assembly;
+use App\Models\OwnershipChange;
 use App\Models\Product;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -79,6 +80,10 @@ class InvoiceController extends Controller
         $data = [];
 
         $assembly = Assembly::find($id);
+
+        $data['title'] = ['text' => Rabbit::uni2zg("တာဝန်ယူထားသော ပစ္စည်းများစာရင်း")];
+
+
         $data['assembly'] = [
             'name' => Rabbit::uni2zg($assembly->name),
             'code' => $assembly->code,
@@ -114,6 +119,87 @@ class InvoiceController extends Controller
 
         // Write HTML content
         $html = View::make('livewire.fix-asset.ownership-pdf', ['data' => $data, 'products' =>   $product_data])->render();  // Myanmar text
+        $mpdf->WriteHTML($html);
+
+        // Output the PDF to the browser
+        $mpdf->Output();
+    }
+
+    public function changeOwnership($id)
+    {
+        // Create a new instance of mPDF
+        $mpdf = new Mpdf([
+            'format' => 'A4',
+            'fontDir' => [storage_path('fonts')],
+            'fontdata' => [
+                'myan3' => [
+                    'R' => 'ZawgyiOne.ttf', // Regular weight
+                ]
+            ]
+        ]);
+
+        // Set font to Zawgyi
+        $mpdf->SetFont('myan3');
+
+        $data = [];
+
+        $changeHistory = OwnershipChange::find($id);
+
+        $assembly = Assembly::find($changeHistory->assembly_id);
+
+        $data['title'] = ['text' => Rabbit::uni2zg("တာဝန်ပြောင်းလဲယူခြင်း")];
+
+        $data['assembly'] = [
+            'name' => Rabbit::uni2zg($assembly->name),
+            'code' => $assembly->code,
+            'remark' => Rabbit::uni2zg($assembly->remark),
+            'location' => Rabbit::uni2zg($assembly->branch->name),
+            'image' => $assembly->image,
+        ];
+
+        $data['responsible'] = [
+            'name' => Rabbit::uni2zg($assembly->employee->name),
+            'stt_id' => $assembly->employee->stt_id,
+            'phone' => Rabbit::uni2zg($assembly->employee->phone),
+            'department' => Rabbit::uni2zg($assembly->employee->department->name),
+            'position' => Rabbit::uni2zg($assembly->employee->position->name),
+        ];
+
+        $data['newOwner'] = [
+            'name' => Rabbit::uni2zg($changeHistory->transferto->name),
+            'stt_id' => $assembly->employee->stt_id,
+            'phone' => Rabbit::uni2zg($changeHistory->transferto->phone),
+            'department' => Rabbit::uni2zg($changeHistory->transferto->department->name),
+            'position' => Rabbit::uni2zg($changeHistory->transferto->position->name),
+            'termto' => Rabbit::uni2zg("လွှဲပြောင်းယူလိုက်ရသော အကြောင်းပြချက်"),
+            'reason' => Rabbit::uni2zg($changeHistory->reason),
+        ];
+
+        $data['approver'] = [
+            'name' => Rabbit::uni2zg($changeHistory->approver->name),
+            'email' => Rabbit::uni2zg($changeHistory->approver->email),
+        ];
+
+
+        $products = Product::where("assembly_id", $assembly->id)
+            ->get();
+
+        $product_data = [];
+
+        foreach ($products as $item) {
+            if (!isset($this->product_data[$item->code])) {
+                $product_data[$item->code] = [
+                    'name' =>  Rabbit::uni2zg($item->name),
+                    'desc' =>  Rabbit::uni2zg($item->description),
+                    'remark' =>  Rabbit::uni2zg($item->remark),
+                    'serial' => $item->serial_number,
+                    'image' => $item->images->first()->image,
+                ];
+            }
+        }
+
+        // Write HTML content
+        $html = View::make('livewire.fix-asset.ownership-change-pdf', ['data' => $data, 'products' =>   $product_data])->render();  // Myanmar text
         $mpdf->WriteHTML($html);
 
         // Output the PDF to the browser
