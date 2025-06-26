@@ -5,7 +5,9 @@
                 <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                     {{ __('New Assembly') }}
                 </h2>
+
                 <x-wui-button label="New" @click="$openModal('newModal')" />
+                <x-wui-button teal label="Get PDF" wire:click='getPdf' />
             </div>
 
             <button
@@ -29,10 +31,10 @@
         </div> --}}
 
         <table class="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
-            <div class="pb-4 bg-white dark:bg-gray-900">
+            <div class="p-4 bg-white dark:bg-gray-900">
                 <label for="table-search" class="sr-only">Search</label>
                 <div class="relative mt-1">
-                    <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <div class="absolute inset-y-0 flex items-center pointer-events-none rtl:inset-r-0 start-0 ps-3">
                         <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -40,8 +42,8 @@
                         </svg>
                     </div>
                     <input type="text" id="table-search" wire:model.live='search'
-                        class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Search for items">
+                        class="block pt-2 text-sm text-gray-900 border border-gray-300 rounded-lg ps-10 w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Search Name/ Assem Code/ တာဝန်ခံ">
                 </div>
             </div>
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -84,14 +86,14 @@
                             {{ $item->remark }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ $item->department->name }}
+                            {{ $item->dName }}
                         </td>
                         <td class="px-6 py-4">
                             <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->image }}"
                                 class="w-20 h-20 rounded-md shadow-lg">
                         </td>
                         <td class="px-6 py-4">
-                            {{ $item->employee->name ?? 'N/A' }}
+                            {{ $item->eName ?? 'N/A' }}
                         </td>
 
                         <td class="px-6 py-4">
@@ -114,7 +116,7 @@
     </div>
 
     {{-- New modal  --}}
-    <x-wui-modal-card title="New Category" name="newModal">
+    <x-wui-modal-card title="Create New Assembly" name="newModal">
         <div class="grid grid-cols-1 gap-4 mb-2 sm:grid-cols-2">
             <x-wui-input label="Name" wire:model='name' placeholder="Computer One Set" />
             <x-wui-input label="Remark" wire:model='remark' placeholder="Desktop & UPS & Others" />
@@ -201,7 +203,7 @@
     </x-wui-modal-card>
 
     {{-- Edit modal  --}}
-    <x-wui-modal-card title="New Category" name="editModal">
+    <x-wui-modal-card title="Create a assembly" name="editModal">
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <x-wui-input label="Name" wire:model='up_name' placeholder="eg. Humburger" />
             <x-wui-input label="Remark" wire:model='up_remark' placeholder="HM" />

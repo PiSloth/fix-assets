@@ -158,11 +158,11 @@ class InvoiceController extends Controller
         ];
 
         $data['responsible'] = [
-            'name' => Rabbit::uni2zg($assembly->employee->name),
-            'stt_id' => $assembly->employee->stt_id,
-            'phone' => Rabbit::uni2zg($assembly->employee->phone),
-            'department' => Rabbit::uni2zg($assembly->employee->department->name),
-            'position' => Rabbit::uni2zg($assembly->employee->position->name),
+            'name' => Rabbit::uni2zg($changeHistory->ownby->name),
+            'stt_id' => $changeHistory->ownby->stt_id,
+            'phone' => Rabbit::uni2zg($changeHistory->ownby->phone),
+            'department' => Rabbit::uni2zg($changeHistory->ownby->department->name),
+            'position' => Rabbit::uni2zg($changeHistory->ownby->position->name),
         ];
 
         $data['newOwner'] = [

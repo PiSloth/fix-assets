@@ -502,8 +502,8 @@
         <div class="grid grid-cols-1 gap-4 mb-2 sm:grid-cols-2">
             <x-wui-select label="Request to" placeholder="Approver" :async-data="route('api.users')" option-label="info"
                 option-value="id" wire:model='approver_id' />
-            <x-wui-input disabled value="{{ $assembly->employee->name }}" label="Own By" />
-            <x-wui-input disabled wire:model='transferby_id' value="{{ $assembly->employee->name }}"
+            <x-wui-input disabled value="{{ $assembly->employee->name ?? '-' }}" label="Own By" />
+            <x-wui-input disabled wire:model='transferby_id' value="{{ $assembly->employee->name ?? '-' }}"
                 label="Transfer By" />
             <x-wui-select label="Responsible to" placeholder="Hand over to" :async-data="route('api.employees')" option-label="name"
                 option-value="id" wire:model='transferto_id' />

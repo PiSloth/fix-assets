@@ -6,6 +6,7 @@ use App\Models\Assembly;
 use App\Models\Branch;
 use App\Models\Department;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -40,6 +41,7 @@ class Asset extends Component
 
     public $department_filter;
     public $search;
+    public $filter_result;
 
     public function create()
     {
@@ -109,22 +111,57 @@ class Asset extends Component
         $this->reset('image');
     }
 
+    public function getPdf()
+    {
+        return redirect('/pdf/1');
+    }
+
     #[Title('Asset')]
     public function render()
     {
-        $assembly = Assembly::select('assemblies.*')
+
+
+        $assembly = DB::table('assemblies')->select('assemblies.*', 'e.name AS eName', 'd.name AS dName')
+            ->leftJoin('employees as e', 'e.id', '=', 'assemblies.employee_id')
+            ->leftJoin('departments as d', 'd.id', 'assemblies.department_id')
             ->when($this->department_filter, function ($query) {
-                $query->where('department_id', $this->department_filter);
+                $query->where('d.id', $this->department_filter);
             })
             ->when($this->search, function ($query) {
-                $query->where('name', 'like', "%{$this->search}%")
-                    ->orWhere('code', 'like', "%{$this->search}%");
-            })
-            ->paginate(10);
+                $query->where('assemblies.name', 'like', "%{$this->search}%")
+                    ->orWhere('assemblies.code', 'like', "%{$this->search}%")
+                    ->orWhere('e.name', 'like', "%{$this->search}%");
+            });
+
+        $this->filter_result[] = $assembly->get();
+        // ->get();
+
+
+        // $this->filter_result = [];
+
+        // foreach ($assembly as $item) {
+        //     $this->filter_result = [
+        //         'id' =>
+        //     ];
+        // }
+
+
+
+
+        // $assembly = Assembly::select('assemblies.*')
+        //     ->when($this->department_filter, function ($query) {
+        //         $query->where('department_id', $this->department_filter);
+        //     })
+        //     ->when($this->search, function ($query) {
+        //         $query->where('name', 'like', "%{$this->search}%")
+        //             ->orWhere('code', 'like', "%{$this->search}%");
+        //     })
+        //     ->paginate(10);
 
         // $assets = Assembly::when($this->department_id, function ($query) {
         //     $query->where('department_id', $this->department_id);
         // })->get();
+        $assembly = $assembly->paginate(10);
 
         return view('livewire.fix-asset.asset', [
             // 'assets' => $assets,
