@@ -121,9 +121,18 @@ class Asset extends Component
     {
 
 
-        $assembly = DB::table('assemblies')->select('assemblies.*', 'e.name AS eName', 'd.name AS dName')
+        $assembly = DB::table('assemblies')->select('assemblies.*', 'e.name AS eName', 'd.name AS dName', 'v.status as status')
             ->leftJoin('employees as e', 'e.id', '=', 'assemblies.employee_id')
             ->leftJoin('departments as d', 'd.id', 'assemblies.department_id')
+            ->leftJoin(DB::raw('
+        (
+            SELECT MAX(id) as id, assembly_id
+            FROM verifies
+            GROUP BY assembly_id
+        ) as latest_v
+    '), 'latest_v.assembly_id', '=', 'assemblies.id')
+            ->leftJoin('verifies as v', 'v.id', '=', 'latest_v.id')
+
             ->when($this->department_filter, function ($query) {
                 $query->where('d.id', $this->department_filter);
             })

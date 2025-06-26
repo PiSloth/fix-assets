@@ -9,6 +9,8 @@ use App\Models\OwnershipChange;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\StockTransfer;
+use App\Models\Verify;
+use App\Models\VerifyPhoto;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
@@ -53,7 +55,7 @@ class AssemblyDetail extends Component
 
     public $update_assembly_image;
 
-    public $up_ass_name, $up_branch_id, $up_dep_id;
+    public $up_ass_name, $up_branch_id, $up_dep_id, $up_remark;
 
     public $transfered_assembly_id;
 
@@ -61,12 +63,17 @@ class AssemblyDetail extends Component
 
     public $ownership_request;
 
+    public $verify_photo, $verifyby_id, $verify_remark;
+
+    public $verify_info;
+
 
     public function mount()
     {
         $assembly = Assembly::findOrFail($this->assembly_id);
 
         $this->up_ass_name = $assembly->name;
+        $this->up_remark = $assembly->remark;
         $this->up_branch_id = $assembly->branch_id;
         $this->up_dep_id = $assembly->department_id;
     }
@@ -91,7 +98,8 @@ class AssemblyDetail extends Component
         $this->validate([
             'up_ass_name' => 'required',
             'up_dep_id' => 'required',
-            'up_branch_id' => 'required'
+            'up_branch_id' => 'required',
+            'up_remark' => 'nullable'
         ]);
 
         $query = Assembly::findOrFail($this->assembly_id);
@@ -99,7 +107,8 @@ class AssemblyDetail extends Component
         $query->update([
             'name' => $this->up_ass_name,
             'department_id' => $this->up_dep_id,
-            'branch_id' => $this->up_branch_id
+            'branch_id' => $this->up_branch_id,
+            'remark' => $this->up_remark
         ]);
 
         $this->dispatch('closeModal', 'editAssemblyModal');
@@ -238,6 +247,7 @@ class AssemblyDetail extends Component
         $this->dispatch('closeModal', 'transferModal');
     }
 
+    //request to ownership change
     public function ownerChange()
     {
         $assembly = Assembly::findOrFail($this->assembly_id);
@@ -263,8 +273,7 @@ class AssemblyDetail extends Component
         $this->dispatch('closeModal', 'ownershipModal');
     }
 
-    // Ownership history read
-
+    //read Ownership transfer request
     public function readOwnership($id)
     {
         $query = OwnershipChange::find($id);
@@ -281,6 +290,7 @@ class AssemblyDetail extends Component
         $this->dispatch('openModal', 'approverModal');
     }
 
+    //Approver transfer form
     public function approveChanges()
     {
 
@@ -329,11 +339,112 @@ class AssemblyDetail extends Component
         $this->dispatch('closeModal', 'approveModal');
     }
 
+    //verify this assembly by Superior person
+    public function verify()
+    {
+        $this->validate([
+            'verifyby_id' => 'required',
+            'remark' => 'nullable',
+            'verify_photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+        ]);
+        $assembly = Assembly::find($this->assembly_id);
+        $path = $this->verify_photo->store('photos', 'verifyPhoto');
+
+        DB::transaction(function () use ($assembly, $path) {
+            $data = Verify::create([
+                'requestby_id' => auth()->user()->id,
+                'verifyby_id' => $this->verifyby_id,
+                'assembly_id' => $this->assembly_id,
+                'responsibleby_id' => $assembly->employee_id,
+                'remark' => $this->verify_remark,
+            ]);
+
+            VerifyPhoto::create([
+                'verify_id' => $data->id,
+                'photo' => $path,
+            ]);
+        });
+    }
+
+    public function readVerifyRequest($id)
+    {
+        $query = Verify::find($id);
+
+        $this->verify_info = [
+            'id' => $query->id,
+            'request_by' => $query->requestby->name,
+            'photos' => $query->photos,
+            'responsible_by' => $query->responsibleby->name,
+        ];
+
+
+        $this->dispatch('openModal', 'verifyAcceptModal');
+    }
+
+    public function verifyAccept()
+    {
+        $query = Verify::find($this->verify_info['id']);
+
+        if ($query->verifyby_id !== auth()->user()->id) {
+            $this->notification()->send([
+                'icon' => 'info',
+                'title' => 'Unauthorized',
+                'description' => 'You are not allowed to edit!',
+            ]);
+            return;
+        }
+
+        $query->update([
+            'status' => 'verified',
+            'remark' => $this->verify_remark
+        ]);
+
+        $this->reset('verify_remark', 'verify_info');
+        $this->dispatch('closeModal', 'verifyAcceptModal');
+    }
+
+    public function verifyReject()
+    {
+        $query = Verify::find($this->verify_info['id']);
+
+        if ($query->verifyby_id !== auth()->user()->id) {
+            $this->notification()->send([
+                'icon' => 'info',
+                'title' => 'Unauthorized',
+                'description' => 'You are not allowed to edit!',
+            ]);
+            return;
+        }
+
+        $query->update([
+            'status' => 'rejected',
+            'remark' => $this->verify_remark
+        ]);
+
+        $this->reset('verify_remark', 'verify_info');
+        $this->dispatch('closeModal', 'verifyAcceptModal');
+    }
+
+    public function cancle_verify_photo()
+    {
+        $this->verify_photo = '';
+    }
+
     #[Title('Assembly Detail')]
     public function render()
     {
-        $transfers = StockTransfer::where("original_assembly_id", '=', $this->assembly_id)->get();
-        $ownership_changes = OwnershipChange::where('assembly_id', '=', $this->assembly_id)->get();
+        $transfers = StockTransfer::where("original_assembly_id", '=', $this->assembly_id)
+            ->orderBy('id', 'desc')
+            ->get();
+        $ownership_changes = OwnershipChange::where('assembly_id', '=', $this->assembly_id)
+            ->orderBy('id', 'desc')
+            ->get();
+        $verify_data = Verify::where('assembly_id', '=', $this->assembly_id)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        // $verify = $verify_data->first()->status;
+        // dd($verify);
 
 
         return view('livewire.fix-asset.assembly-detail', [
@@ -343,6 +454,7 @@ class AssemblyDetail extends Component
             'branches' => Branch::all(),
             'transfers' => $transfers,
             'ownership_changes' => $ownership_changes,
+            'verify_data' => $verify_data,
         ]);
     }
 }

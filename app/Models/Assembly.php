@@ -34,4 +34,9 @@ class Assembly extends Model
     {
         return $this->belongsTo(Employee::class);
     }
+
+    public function verify()
+    {
+        return $this->hasMany(Verify::class);
+    }
 }
