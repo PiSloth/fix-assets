@@ -89,7 +89,12 @@
         <div class="flex flex-col space-y-4">
             @foreach ($product->remarks as $comment)
                 <div class="p-4 bg-white rounded-lg shadow-md">
-                    <h3 class="text-lg font-bold">{{ $comment->employee->name }}</h3>
+                    <span>တာဝန်ခံ - </span>
+                    @if ($comment->employee_id > 0)
+                        <h3 class="text-lg font-bold">{{ $comment->employee->name }}</h3>
+                    @endif
+                    <hr />
+                    <span class="text-gray-700">{{ $comment->user->name }}<i>: commenter</i></span>
                     <p class="mb-2 text-sm text-gray-700">Posted on ({{ $comment->created_at->format('j M y') }})</p>
                     <p class="text-gray-700">{{ $comment->remark }}</p>
                 </div>

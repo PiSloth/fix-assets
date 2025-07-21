@@ -14,6 +14,7 @@ use App\Livewire\FixAsset\TransferAssembly;
 use App\Livewire\ProductSetting\Accessory;
 use App\Livewire\ProductSetting\AccessoryConfig;
 use App\Livewire\ProductSetting\ProductDetail;
+use App\Livewire\ProductSetting\VerifyReport;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use Illuminate\Support\Facades\Response;
@@ -93,6 +94,8 @@ Route::middleware(['auth'])->prefix('fix-asset')->group(function () {
     Route::get('/assembly/detail', AssemblyDetail::class)->name('assembly.detail');
     Route::get('/assembly/transfer', TransferAssembly::class)->name('assembly.transfer');
     Route::get('/asset/ownership', OwnershipPreview::class)->name('ownership.preview');
+    Route::get('/asset/report/verify', VerifyReport::class)->name('report.verify');
+
     // Route::get('/permission', UserPermission::class)->name('user-permission');
 });
 

@@ -131,10 +131,12 @@ $logout = function (Logout $logout) {
                                 <x-dropdown-link :href="route('assets')" wire:navigate>
                                     {{ 'Fix Assets' }}
                                 </x-dropdown-link>
-                                <!-- Accessory -->
-                                {{-- <x-dropdown-link :href="route('accessory')" wire:navigate>
-                                      {{ 'Accessory' }}
-                                  </x-dropdown-link> --}}
+                                @if (auth()->user()->hasAnyRole(['admin']))
+                                    <x-dropdown-link :href="route('report.verify')" wire:navigate>
+                                        {{ 'Verify' }}
+                                    </x-dropdown-link>
+                                @endif
+
                             </x-slot>
                         </x-dropdown>
                     </div>
