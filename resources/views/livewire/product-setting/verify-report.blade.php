@@ -8,7 +8,7 @@
     <div class="flex items-end gap-4 mb-4">
         <div>
             <label class="block text-sm font-semibold">Start Date</label>
-            <input type="date" wire:model="startDate" class="px-2 py-1 border rounded" />
+            <input type="date" wire:model.live="startDate" class="px-2 py-1 border rounded" />
         </div>
         <div>
             <label class="block text-sm font-semibold">End Date</label>

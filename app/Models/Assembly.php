@@ -39,4 +39,21 @@ class Assembly extends Model
     {
         return $this->hasMany(Verify::class);
     }
+
+    public function latestVerify()
+    {
+        return $this->hasOne(Verify::class)->latestOfMany();
+    }
+
+    /**
+     * Get the image as a data URI.
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        if ($this->image) {
+            return 'data:image/jpeg;base64,' . base64_encode($this->image);
+        }
+
+        return null;
+    }
 }

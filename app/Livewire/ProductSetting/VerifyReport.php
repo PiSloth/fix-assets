@@ -64,9 +64,7 @@ class VerifyReport extends Component
         $this->requests = $query->get();
 
         // Group requests by requester for the interval
-        $this->groupedRequests = $this->requests->groupBy(function ($item) {
-            return $item->requestby_id;
-        });
+        $this->groupedRequests = $this->requests->groupBy('requestby_id');
 
         // Count requests per requester (by requestby_id)
         $this->requesterPerformance = Verify::select('requestby_id')
