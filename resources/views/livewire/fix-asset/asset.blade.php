@@ -8,6 +8,7 @@
 
                 <x-wui-button label="New" @click="$openModal('newModal')" />
                 <x-wui-button teal label="Get PDF" wire:click='getPdf' />
+                <x-wui-button green label="Export Products" wire:click='exportProducts' />
             </div>
 
             <button
@@ -69,6 +70,9 @@
                     <th scope="col" class="px-6 py-3">
                         တာဝန်ခံ
                     </th>
+                    <th scope="col" class="px-6 py-3">
+                        Active
+                    </th>
                     <th scope="col" class="px-6 py-3 sr-only">
                         Action
                     </th>
@@ -86,7 +90,7 @@
                             {{ $item->code }}
                         </td>
                         <td class="px-6 py-4">
-                            @if ($item->status == 'verified')
+                            @if ($item->latestVerify?->status == 'verified')
                                 <p class="flex gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                                         version="1.1" width="20" height="20" viewBox="0 0 256 256"
@@ -126,7 +130,8 @@
                                                 transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
                                         </g>
                                     </svg>
-                                    <span class="text-red-300">{{ ucfirst($item->status) ?? 'Unknow' }}</span>
+                                    <span
+                                        class="text-red-300">{{ ucfirst($item->latestVerify?->status) ?? 'Unknown' }}</span>
                                 </p>
                             @endif
                         </td>
@@ -134,14 +139,21 @@
                             {{ $item->remark }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ $item->dName }}
+                            {{ $item->department->name }}
                         </td>
                         <td class="px-6 py-4">
                             <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->image }}"
                                 class="w-20 h-20 rounded-md shadow-lg">
                         </td>
                         <td class="px-6 py-4">
-                            {{ $item->eName ?? 'N/A' }}
+                            {{ $item->employee->name ?? 'N/A' }}
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <button wire:click="toggleActive({{ $item->id }})"
+                                class="px-3 py-1 text-xs font-medium rounded-full {{ $item->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                {{ $item->is_active ? 'Active' : 'Inactive' }}
+                            </button>
                         </td>
 
                         <td class="px-6 py-4">

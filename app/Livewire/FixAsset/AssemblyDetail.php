@@ -258,6 +258,16 @@ class AssemblyDetail extends Component
             'reason' => 'required',
         ]);
 
+        //check if the requester is the same as the approver
+        if ($this->approver_id == auth()->user()->id) {
+            $this->notification()->send([
+                'icon' => 'warning',
+                'title' => 'Invalid Approver',
+                'description' => 'You cannot approve your own request.',
+            ]);
+            return;
+        }
+
         DB::transaction(function () use ($assembly) {
             OwnershipChange::create([
                 'ownby_id' => $assembly->employee->id,
@@ -296,6 +306,7 @@ class AssemblyDetail extends Component
 
         $query = OwnershipChange::find($this->ownership_request['id']);
         $assembly = Assembly::find($this->assembly_id);
+
 
         if ($query->approver_id !== auth()->user()->id) {
             $this->notification()->send([
@@ -347,8 +358,38 @@ class AssemblyDetail extends Component
             'remark' => 'nullable',
             'verify_photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
         ]);
+
+
         $assembly = Assembly::find($this->assembly_id);
         $path = $this->verify_photo->store('photos', 'verifyPhoto');
+
+        $verifyStatus = Verify::where('assembly_id', $this->assembly_id)
+            ->where('status', 'pending')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        //verify if there is pending request
+        if ($verifyStatus) {
+            $this->dispatch('closeModal', 'verifyModal');
+
+            $this->notification()->send([
+                'icon' => 'warning',
+                'title' => 'Pending Verification Exists',
+                'description' => 'There is already a pending verification request for this assembly.',
+            ]);
+            return;
+        }
+
+        //reject if the verifier is the same as the requester
+        if ($this->verifyby_id == auth()->user()->id) {
+            $this->dispatch('closeModal', 'verifyModal');
+            $this->notification()->send([
+                'icon' => 'warning',
+                'title' => 'Invalid Verifier',
+                'description' => 'You cannot verify your own request.',
+            ]);
+            return;
+        }
 
         DB::transaction(function () use ($assembly, $path) {
             $data = Verify::create([
@@ -364,6 +405,9 @@ class AssemblyDetail extends Component
                 'photo' => $path,
             ]);
         });
+
+        $this->reset('verifyby_id', 'verify_remark', 'verify_photo');
+        $this->dispatch('closeModal', 'verifyModal');
     }
 
     public function readVerifyRequest($id)

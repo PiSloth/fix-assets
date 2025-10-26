@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +19,7 @@ class Assembly extends Model
         'employee_id',
         'remark',
         'user_id',
+        'is_active',
     ];
 
     public function department()
@@ -45,15 +47,20 @@ class Assembly extends Model
         return $this->hasOne(Verify::class)->latestOfMany();
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
     /**
      * Get the image as a data URI.
      */
-    public function getImageUrlAttribute(): ?string
+    protected function imageUrl(): Attribute
     {
-        if ($this->image) {
-            return 'data:image/jpeg;base64,' . base64_encode($this->image);
-        }
-
-        return null;
+        return Attribute::get(function ($value, $attributes) {
+            // Convert binary to readable string if not null
+            return isset($attributes['image'])
+                ? trim($attributes['image'])
+                : null;
+        });
     }
 }

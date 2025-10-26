@@ -2,9 +2,12 @@
 
 namespace App\Livewire\FixAsset;
 
+use App\Exports\ProductsExport;
 use App\Models\Assembly;
 use App\Models\Branch;
 use App\Models\Department;
+use App\Models\Product;
+use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Title;
@@ -35,6 +38,12 @@ class Asset extends Component
 
     public $up_code;
 
+    public $up_remark;
+
+    public $up_department_id;
+
+    public $up_branch_id;
+
     public $edit_id;
 
     public $image;
@@ -42,6 +51,7 @@ class Asset extends Component
     public $department_filter;
     public $search;
     public $filter_result;
+    public $is_active_filter;
 
     public function create()
     {
@@ -77,9 +87,9 @@ class Asset extends Component
     {
         $query = Assembly::find($id);
         $this->up_name = $query->name;
-        $this->department_id = $query->department_id;
-        $this->branch_id = $query->branch_id;
-        $this->remark = $query->remark;
+        $this->up_department_id = $query->department_id;
+        $this->up_branch_id = $query->branch_id;
+        $this->up_remark = $query->remark;
 
         $this->edit_id = $id;
         $this->dispatch('openModal', 'editModal');
@@ -95,14 +105,13 @@ class Asset extends Component
         ]);
 
         Assembly::find($this->edit_id)->update([
-            'accessories_group_id' => $this->accessories_group_id,
             'name' => $this->up_name,
             'department_id' => $this->up_department_id,
             'branch_id' => $this->up_branch_id,
             'remark' => $this->up_remark,
         ]);
 
-        $this->reset('up_name', 'up_code', 'edit_id', 'accessories_group_id');
+        $this->reset('up_name', 'up_code', 'edit_id');
         $this->dispatch('closeModal', 'editModal');
     }
 
@@ -116,65 +125,84 @@ class Asset extends Component
         return redirect('/pdf/1');
     }
 
+    public function toggleActive($id)
+    {
+        $assembly = Assembly::find($id);
+        $assembly->update(['is_active' => !$assembly->is_active]);
+        $this->notification()->success('Status updated successfully!');
+    }
+
+    public function exportProducts()
+    {
+        // Build the assembly query with filters
+        $assemblyQuery = Assembly::with([
+            'department:id,name',
+            'branch:id,name',
+            'employee:id,name',
+            'latestVerify:id,status'
+        ])
+            ->select('assemblies.*')
+            ->where('is_active', true)
+            ->when($this->department_filter, function ($q) {
+                $q->where('department_id', $this->department_filter);
+            })
+            ->when($this->search, function ($q) {
+                $q->where(function ($subQ) {
+                    $subQ->where('assemblies.name', 'like', "%{$this->search}%")
+                        ->orWhere('assemblies.code', 'like', "%{$this->search}%")
+                        ->orWhereHas('employee', function ($empQ) {
+                            $empQ->where('name', 'like', "%{$this->search}%");
+                        });
+                });
+            });
+
+        // Get assembly IDs
+        $assemblyIds = $assemblyQuery->pluck('id');
+
+        // Build products query with assembly data
+        $productsQuery = Product::with([
+            'assembly' => function ($q) {
+                $q->with('department:id,name', 'branch:id,name', 'employee:id,name');
+            }
+        ])
+            ->select('products.*')
+            ->whereIn('assembly_id', $assemblyIds);
+
+        return Excel::download(new ProductsExport($productsQuery), 'products.xlsx');
+    }
+
     #[Title('Asset')]
     public function render()
     {
-
-
-        $assembly = DB::table('assemblies')->select('assemblies.*', 'e.name AS eName', 'd.name AS dName', 'v.status as status')
-            ->leftJoin('employees as e', 'e.id', '=', 'assemblies.employee_id')
-            ->leftJoin('departments as d', 'd.id', 'assemblies.department_id')
-            ->leftJoin(DB::raw('
-        (
-            SELECT MAX(id) as id, assembly_id
-            FROM verifies
-            GROUP BY assembly_id
-        ) as latest_v
-    '), 'latest_v.assembly_id', '=', 'assemblies.id')
-            ->leftJoin('verifies as v', 'v.id', '=', 'latest_v.id')
-
-            ->when($this->department_filter, function ($query) {
-                $query->where('d.id', $this->department_filter);
+        // Refactored query using Eloquent for better readability and maintainability
+        $query = Assembly::with([
+            'department:id,name',
+            'branch:id,name',
+            'employee:id,name',
+            'latestVerify:id,status'
+        ])
+            ->select('assemblies.*')
+            ->where('is_active', true)
+            ->when($this->department_filter, function ($q) {
+                $q->where('department_id', $this->department_filter);
             })
-            ->when($this->search, function ($query) {
-                $query->where('assemblies.name', 'like', "%{$this->search}%")
-                    ->orWhere('assemblies.code', 'like', "%{$this->search}%")
-                    ->orWhere('e.name', 'like', "%{$this->search}%");
-            });
+            ->when(
+                $this->search,
+                function ($q) {
+                    $q->where(function ($subQ) {
+                        $subQ->where('assemblies.name', 'like', "%{$this->search}%")
+                            ->orWhere('assemblies.code', 'like', "%{$this->search}%")
+                            ->orWhereHas('employee', function ($empQ) {
+                                $empQ->where('name', 'like', "%{$this->search}%");
+                            });
+                    });
+                }
+            );
 
-        $this->filter_result[] = $assembly->get();
-        // ->get();
-
-
-        // $this->filter_result = [];
-
-        // foreach ($assembly as $item) {
-        //     $this->filter_result = [
-        //         'id' =>
-        //     ];
-        // }
-
-
-
-
-        // $assembly = Assembly::select('assemblies.*')
-        //     ->when($this->department_filter, function ($query) {
-        //         $query->where('department_id', $this->department_filter);
-        //     })
-        //     ->when($this->search, function ($query) {
-        //         $query->where('name', 'like', "%{$this->search}%")
-        //             ->orWhere('code', 'like', "%{$this->search}%");
-        //     })
-        //     ->paginate(10);
-
-        // $assets = Assembly::when($this->department_id, function ($query) {
-        //     $query->where('department_id', $this->department_id);
-        // })->get();
-        $assembly = $assembly->paginate(10);
+        $assemblies = $query->paginate(10);
 
         return view('livewire.fix-asset.asset', [
-            // 'assets' => $assets,
-            'assemblies' => $assembly,
+            'assemblies' => $assemblies,
             'departments' => Department::all(),
             'branches' => Branch::all(),
         ]);

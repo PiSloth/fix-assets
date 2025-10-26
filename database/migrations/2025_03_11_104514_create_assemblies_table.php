@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->binary('image')->nullable();
             $table->string('remark')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

@@ -9,6 +9,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class AssembliesTable
@@ -23,6 +24,7 @@ class AssembliesTable
                     ->searchable(),
                 TextColumn::make('branch.name')
                     ->searchable()
+                    ->toggleable()
                     ->sortable(),
                 TextColumn::make('department.name')
                     // ->numeric()
@@ -49,11 +51,16 @@ class AssembliesTable
                     })
                     ->sortable(),
 
-                ImageColumn::make('image_url')
-                    ->label('Image'),
+                // ImageColumn::make('getImageUrlAttribute')
+                //     ->toggleable()
+                //     ->label('Image'),
+                ImageColumn::make('image')
+                    ->label('Image')
+                    ->square() // or ->circular()
+                    ->width(80)
+                    ->toggleable(),
 
-                TextColumn::make('remark')
-                    ->searchable(),
+                TextColumn::make('remark'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -64,12 +71,25 @@ class AssembliesTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                \Filament\Tables\Filters\SelectFilter::make('branch_id')
+                SelectFilter::make('branch_id')
                     ->label('Branch')
                     ->relationship('branch', 'name'),
-                \Filament\Tables\Filters\SelectFilter::make('department_id')
+                SelectFilter::make('department_id')
                     ->label('Department')
                     ->relationship('department', 'name'),
+                SelectFilter::make('employee_id')
+                    ->label('Employee')
+                    ->relationship('employee', 'name'),
+                SelectFilter::make('user_id')
+                    ->label('Created By')
+                    ->relationship('user', 'name'),
+                // SelectFilter::make('status')
+                //     ->options([
+                //         'Not Verified' => 'Not Verified',
+                //         'Pending' => 'Pending',
+                //         'Verified' => 'Verified',
+                //         'Reject' => 'Reject',
+                //     ]),
             ])
             ->recordActions([
                 ViewAction::make(),
