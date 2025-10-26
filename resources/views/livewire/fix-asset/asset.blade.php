@@ -70,9 +70,11 @@
                     <th scope="col" class="px-6 py-3">
                         တာဝန်ခံ
                     </th>
-                    <th scope="col" class="px-6 py-3">
-                        Active
-                    </th>
+                    @haspermission('admin')
+                        <th scope="col" class="px-6 py-3">
+                            Active
+                        </th>
+                    @endhaspermission
                     <th scope="col" class="px-6 py-3 sr-only">
                         Action
                     </th>
@@ -145,14 +147,14 @@
                         <td class="px-6 py-4">
                             {{ $item->employee->name ?? 'N/A' }}
                         </td>
-
-                        <td class="px-6 py-4">
-                            <button wire:click="toggleActive({{ $item->id }})"
-                                class="px-3 py-1 text-xs font-medium rounded-full {{ $item->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                {{ $item->is_active ? 'Active' : 'Inactive' }}
-                            </button>
-                        </td>
-
+                        @haspermission('admin')
+                            <td class="px-6 py-4">
+                                <button wire:click="toggleActive({{ $item->id }})"
+                                    class="px-3 py-1 text-xs font-medium rounded-full {{ $item->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                    {{ $item->is_active ? 'Active' : 'Inactive' }}
+                                </button>
+                            </td>
+                        @endhaspermission
                         <td class="px-6 py-4">
                             {{-- <x-wui-button label="edit" wire:click='read({{ $item->id }})' /> --}}
                             <x-wui-button teal icon="eye" :href="route('assembly.detail', ['id' => $item->id])" />
