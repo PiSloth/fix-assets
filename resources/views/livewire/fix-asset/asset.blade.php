@@ -147,14 +147,14 @@
                         <td class="px-6 py-4">
                             {{ $item->employee->name ?? 'N/A' }}
                         </td>
-                        @haspermission('admin')
+                        @hasrole('admin')
                             <td class="px-6 py-4">
                                 <button wire:click="toggleActive({{ $item->id }})"
                                     class="px-3 py-1 text-xs font-medium rounded-full {{ $item->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                     {{ $item->is_active ? 'Active' : 'Inactive' }}
                                 </button>
                             </td>
-                        @endhaspermission
+                        @endhasrole
                         <td class="px-6 py-4">
                             {{-- <x-wui-button label="edit" wire:click='read({{ $item->id }})' /> --}}
                             <x-wui-button teal icon="eye" :href="route('assembly.detail', ['id' => $item->id])" />
