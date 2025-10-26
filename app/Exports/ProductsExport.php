@@ -44,8 +44,9 @@ class ProductsExport implements FromQuery, WithHeadings, WithMapping
             'Branch Name',
             'Employee Name',
             'Assembly Remark',
-            'Created By',
-            // 'Assembly Is Active',
+            'Creater By',
+            'Assembly Is Active',
+            'Verify Status',
             'Assembly Created At',
             // 'Assembly Updated At',
         ];
@@ -77,7 +78,8 @@ class ProductsExport implements FromQuery, WithHeadings, WithMapping
             $product->assembly->remark ?? '',
             $product->assembly->user->name ?? '',
             // $product->assembly->is_active ?? '',
-            date_format($product->assembly->created_at, 'm/j/Y') ?? '',
+            $product->assembly->latestVerify->status ?? '',
+            date_format($product->assembly->created_at, 'j-M-Y') ?? '',
             // $product->assembly->updated_at ?? '',
         ];
     }

@@ -91,48 +91,45 @@
                         </td>
                         <td class="px-6 py-4">
                             @if ($item->latestVerify?->status == 'verified')
-                                <p class="flex gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                        version="1.1" width="20" height="20" viewBox="0 0 256 256"
-                                        xml:space="preserve">
-                                        <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;"
-                                            transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
-                                            <path
-                                                d="M 49.66 1.125 L 49.66 1.125 c 4.67 -2.393 10.394 -0.859 13.243 3.548 l 0 0 c 1.784 2.761 4.788 4.495 8.071 4.66 l 0 0 c 5.241 0.263 9.431 4.453 9.694 9.694 v 0 c 0.165 3.283 1.899 6.286 4.66 8.071 l 0 0 c 4.407 2.848 5.941 8.572 3.548 13.242 l 0 0 c -1.499 2.926 -1.499 6.394 0 9.319 l 0 0 c 2.393 4.67 0.859 10.394 -3.548 13.242 l 0 0 c -2.761 1.784 -4.495 4.788 -4.66 8.071 v 0 c -0.263 5.241 -4.453 9.431 -9.694 9.694 h 0 c -3.283 0.165 -6.286 1.899 -8.071 4.66 l 0 0 c -2.848 4.407 -8.572 5.941 -13.242 3.548 l 0 0 c -2.926 -1.499 -6.394 -1.499 -9.319 0 l 0 0 c -4.67 2.393 -10.394 0.859 -13.242 -3.548 l 0 0 c -1.784 -2.761 -4.788 -4.495 -8.071 -4.66 h 0 c -5.241 -0.263 -9.431 -4.453 -9.694 -9.694 l 0 0 c -0.165 -3.283 -1.899 -6.286 -4.66 -8.071 l 0 0 C 0.266 60.054 -1.267 54.33 1.125 49.66 l 0 0 c 1.499 -2.926 1.499 -6.394 0 -9.319 l 0 0 c -2.393 -4.67 -0.859 -10.394 3.548 -13.242 l 0 0 c 2.761 -1.784 4.495 -4.788 4.66 -8.071 l 0 0 c 0.263 -5.241 4.453 -9.431 9.694 -9.694 l 0 0 c 3.283 -0.165 6.286 -1.899 8.071 -4.66 l 0 0 c 2.848 -4.407 8.572 -5.941 13.242 -3.548 l 0 0 C 43.266 2.624 46.734 2.624 49.66 1.125 z"
-                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,131,249); fill-rule: nonzero; opacity: 1;"
-                                                transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-                                            <polygon
-                                                points="36.94,66.3 36.94,66.3 36.94,46.9 36.94,46.9 62.8,35.34 72.5,45.04 "
-                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,119,227); fill-rule: nonzero; opacity: 1;"
-                                                transform="  matrix(1 0 0 1 0 0) " />
-                                            <polygon
-                                                points="36.94,66.3 17.5,46.87 27.2,37.16 36.94,46.9 60.11,23.7 69.81,33.39 "
-                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;"
-                                                transform="  matrix(1 0 0 1 0 0) " />
-                                        </g>
+                                <span
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd"></path>
                                     </svg>
-                                    <span class="text-slate-500">Verified</span>
-                                </p>
+                                    Verified
+                                </span>
+                            @elseif($item->latestVerify?->status == 'pending')
+                                <span
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    Pending
+                                </span>
+                            @elseif($item->latestVerify?->status == 'rejected')
+                                <span
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    Rejected
+                                </span>
                             @else
-                                <p class="flex gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                        version="1.1" width="20" height="20" viewBox="0 0 256 256"
-                                        xml:space="preserve">
-                                        <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;"
-                                            transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
-                                            <path
-                                                d="M 40.513 41.614 c 2.452 2.125 2.458 5.665 0.005 7.79 c -4.107 3.558 -9.02 7.211 -9.777 17.146 c -0.047 0.611 0.451 1.133 1.064 1.133 l 27.292 0 c 0.613 0 1.111 -0.522 1.064 -1.133 c -0.757 -9.934 -5.67 -13.587 -9.777 -17.146 c -2.453 -2.126 -2.447 -5.666 0.006 -7.792 c 4.24 -3.673 9.337 -7.45 9.831 -18.138 c 0.028 -0.601 -0.465 -1.107 -1.067 -1.107 l -27.407 0 c -0.602 0 -1.095 0.506 -1.067 1.107 C 31.175 34.164 36.273 37.94 40.513 41.614 z"
-                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(181,0,219); fill-rule: nonzero; opacity: 1;"
-                                                transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-                                            <path
-                                                d="M 88.711 60.078 l -7.712 -2.066 c -2.998 8.042 -8.643 14.735 -16.171 19.08 c -8.575 4.947 -18.557 6.261 -28.113 3.699 c -9.544 -2.557 -17.528 -8.69 -22.481 -17.268 c -4.953 -8.579 -6.272 -18.56 -3.715 -28.104 c 5.286 -19.73 25.638 -31.48 45.374 -26.197 c 5.004 1.341 9.596 3.678 13.647 6.945 l 3.104 2.502 l -5.721 5.721 h 16.556 V 7.835 l -5.262 5.262 l -2.52 -2.177 c -5.151 -4.45 -11.121 -7.606 -17.744 -9.382 C 54.067 0.497 50.161 0 46.318 0 C 26.449 0 8.218 13.278 2.836 33.361 c -3.106 11.59 -1.502 23.714 4.515 34.137 s 15.715 17.872 27.305 20.978 c 11.498 3.078 23.845 1.453 34.148 -4.495 C 78.174 78.57 85.143 70.17 88.711 60.078 z"
-                                                style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(181,0,219); fill-rule: nonzero; opacity: 1;"
-                                                transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-                                        </g>
+                                <span
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clip-rule="evenodd"></path>
                                     </svg>
-                                    <span
-                                        class="text-red-300">{{ ucfirst($item->latestVerify?->status) ?? 'Unknown' }}</span>
-                                </p>
+                                    Unknown
+                                </span>
                             @endif
                         </td>
                         <td class="px-6 py-4">
@@ -308,10 +305,21 @@
         <div class="mt-4">
             <select wire:model.live="department_filter" required
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option value="" selected>All Branch</option>
+                <option value="" selected>All Department</option>
                 @foreach ($departments as $department)
                     <option value="{{ $department->id }}">{{ $department->name }}</option>
                 @endforeach
+            </select>
+        </div>
+
+        <!-- Verify Status Filter -->
+        <div class="mt-4">
+            <select wire:model.live="verify_status_filter" required
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option value="" selected>All Status</option>
+                <option value="verified">Verified</option>
+                <option value="pending">Pending</option>
+                <option value="rejected">Rejected</option>
             </select>
         </div>
 

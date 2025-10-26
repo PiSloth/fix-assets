@@ -52,6 +52,7 @@ class Asset extends Component
     public $search;
     public $filter_result;
     public $is_active_filter;
+    public $verify_status_filter;
 
     public function create()
     {
@@ -146,6 +147,11 @@ class Asset extends Component
             ->when($this->department_filter, function ($q) {
                 $q->where('department_id', $this->department_filter);
             })
+            ->when($this->verify_status_filter, function ($q) {
+                $q->whereHas('latestVerify', function ($vq) {
+                    $vq->where('status', $this->verify_status_filter);
+                });
+            })
             ->when($this->search, function ($q) {
                 $q->where(function ($subQ) {
                     $subQ->where('assemblies.name', 'like', "%{$this->search}%")
@@ -162,7 +168,7 @@ class Asset extends Component
         // Build products query with assembly data
         $productsQuery = Product::with([
             'assembly' => function ($q) {
-                $q->with('department:id,name', 'branch:id,name', 'employee:id,name');
+                $q->with('department:id,name', 'branch:id,name', 'employee:id,name', 'latestVerify:id,status');
             }
         ])
             ->select('products.*')
@@ -185,6 +191,11 @@ class Asset extends Component
             ->where('is_active', true)
             ->when($this->department_filter, function ($q) {
                 $q->where('department_id', $this->department_filter);
+            })
+            ->when($this->verify_status_filter, function ($q) {
+                $q->whereHas('latestVerify', function ($vq) {
+                    $vq->where('status', $this->verify_status_filter);
+                });
             })
             ->when(
                 $this->search,
