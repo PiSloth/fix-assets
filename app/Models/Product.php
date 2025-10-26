@@ -11,6 +11,11 @@ class Product extends Model
 
     protected $guarded = [];
 
+    public function assembly()
+    {
+        return $this->belongsTo(Assembly::class);
+    }
+
     public function images()
     {
         return $this->hasMany(ProductImage::class);
