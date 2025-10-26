@@ -92,7 +92,8 @@
                             {{ $item->code }}
                         </td>
                         <td class="px-6 py-4">
-                            @if ($item->latestVerify?->status == 'verified')
+
+                            @if ($item->verify()->orderBy('id', 'desc')->first()?->status == 'verified')
                                 <span
                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
                                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -102,7 +103,7 @@
                                     </svg>
                                     Verified
                                 </span>
-                            @elseif($item->latestVerify?->status == 'pending')
+                            @elseif($item->verify()->orderBy('id', 'desc')->first()?->status == 'pending')
                                 <span
                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
                                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -112,7 +113,7 @@
                                     </svg>
                                     Pending
                                 </span>
-                            @elseif($item->latestVerify?->status == 'rejected')
+                            @elseif($item->verify()->orderBy('id', 'desc')->first()?->status == 'rejected')
                                 <span
                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300">
                                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">

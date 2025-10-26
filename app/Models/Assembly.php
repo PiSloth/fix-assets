@@ -44,7 +44,7 @@ class Assembly extends Model
 
     public function latestVerify()
     {
-        return $this->hasOne(Verify::class)->latestOfMany();
+        return $this->hasOne(Verify::class, 'assembly_id', 'id')->latestOfMany('id');
     }
 
     public function user()

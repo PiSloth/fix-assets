@@ -79,7 +79,7 @@ class ProductsExport implements FromQuery, WithHeadings, WithMapping
             $product->assembly->remark ?? '',
             $product->assembly->user->name ?? '',
             //             $product->assembly->is_active ? 'Active' : 'Inactive',,
-            $product->assembly->latestVerify->status ?? 'Unknown',
+            $product->assembly->verify()->orderBy('id', 'desc')->first()?->status ?? 'Unknown',
             date_format($product->assembly->created_at, 'j-M-Y') ?? '',
             // $product->assembly->updated_at ?? '',
         ];
